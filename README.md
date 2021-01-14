@@ -2,9 +2,9 @@
 
 This is a competition entry for the European Robotic League and part of our PhD work at the Edinburgh Centre for Robotics Centre for Doctoral Training in Robotics and Autonomous Systems. The goal of this project is to produce a software system which is:
 
-•	Competitive, i.e. software supporting HWU ECR entries to this type of competitions (ERL, Robocup@Home, METRICS...).
-•	Flexible, modular, and easy to configure software (teams typically have half a day / one day) to configure their system to operate in the test-bed where the tournament takes place - ideally most of which should be usable for both HSR and Tiago
-•	Robust (keep things simple, consider an integration and testing plan)
+- Competitive, i.e. software supporting HWU ECR entries to this type of competitions (ERL, Robocup@Home, METRICS...).
+- Flexible, modular, and easy to configure software (teams typically have half a day / one day) to configure their system to operate in the test-bed where the tournament takes place - ideally most of which should be usable for both HSR and Tiago
+- Robust (keep things simple, consider an integration and testing plan)
 
 In addition to the code available in this repo we have produced a [demonstration video]() and [team description paper]().
 
