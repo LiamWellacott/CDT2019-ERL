@@ -8,7 +8,7 @@
 
 ## Info/useful links
 
-- [Sharepoint](https://heriotwatt.sharepoint.com/sites/CDT2019-ERL) for project documentation.
+- [Sharepoint](https://heriotwatt.sharepoint.com/sites/CDT2019-ERL) for project documentation, you must use your HW credentials to access, non HW accounts cannot be added to this.
 - [Overleaf report](https://www.overleaf.com/read/tbvrxpjrnrkt) for paper (tell me your email to be added as collaborator)
 
 [Competition Website](https://www.eu-robotics.net/robotics_league/erl-consumer/about/index.html)
