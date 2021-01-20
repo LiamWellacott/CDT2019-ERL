@@ -10,6 +10,73 @@ In addition to the code available in this repo we have produced a [demonstration
 
 ## Set up
 
+### Before cloning this repo:
+
+1. Install ROS (version x) and other dependencies (TBD)
+2. Create a ros workspace and ``cd`` into the ``src`` directory:
+
+```
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/
+catkin_make
+cd src
+```
+3. Clone this repo into the ``src`` directory
+
+### After cloning this repo
+
+1. ``cd`` to the ``src`` folder of the workspace, from the previous steps you should be there already
+2. (on your pc) clone the virtual environments ([RALT virtual environment](https://github.com/LiamWellacott/Virtual-RALT-Standalone), [mbot environment](https://github.com/LiamWellacott/mbot_simulation_environments/tree/melodic)):
+
+```
+git clone https://github.com/care-group/Virtual-RALT-Standalone.git
+git clone https://github.com/LiamWellacott/mbot_simulation_environments.git
+cd ..
+catkin_make
+```
+3. Install the TIAGo software. Below instructions adapted from [here](http://wiki.ros.org/Robots/TIAGo/Tutorials/Installation/TiagoSimulation).
+
+```
+# if you haven't used rosinstall before you may have to run:
+sudo apt install python-rosinstall
+
+# download the file "tiago_public.rosinstall" into the workspace root
+
+# in the root directory of the workspace (watch for the ROS distribution in the file name, make sure it matches what you downloaded)
+rosinstall src /opt/ros/melodic tiago_public-melodic.rosinstall
+
+# not sure if this is needed for first build... source src/setup.bash
+
+# ensure you have the dependencies required to build
+sudo rosdep init
+rosdep update
+## my install of moveit failed... you may need to run sudo apt-get update before running the next line
+rosdep install --from-paths src --ignore-src -y --rosdistro melodic --skip-keys="opencv2 opencv2-nonfree pal_laser_filters speed_limit_node sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup opencv3"
+
+# build
+catkin_make
+```
+## Running
+
+1. Make sure the workspace is on the ros package path, check path with ``echo $ROS_PACKAGE_PATH``
+
+```
+# may want to add it to ~/.bashrc to avoid having to do it for each terminal
+source {path to workspace}/devel/setup.bash
+```
+
+2. (First time test only) You can launch the default robot sim with:
+
+```
+roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true robot:=steel
+```
+
+3. (First time test only) You can launch the virtual environment with:
+
+```
+roslaunch virtual_ralt_standalone virtual_ralt_standalone.launch
+```
+
 ## Change protocol
 
 **You must have your own fork to contribute to the project**, we will use a pull request model for managing contributions each change must be reviewed before merging is allowed.
