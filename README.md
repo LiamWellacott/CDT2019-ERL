@@ -26,7 +26,7 @@ cd src
 ### After cloning this repo
 
 1. ``cd`` to the ``src`` folder of the workspace, from the previous steps you should be there already
-2. (on your pc) clone the virtual environments ([RALT virtual environment](https://github.com/LiamWellacott/Virtual-RALT-Standalone), [mbot environment](https://github.com/LiamWellacott/mbot_simulation_environments/tree/melodic)):
+2. Clone the virtual environments ([RALT virtual environment](https://github.com/LiamWellacott/Virtual-RALT-Standalone), [mbot environment](https://github.com/LiamWellacott/mbot_simulation_environments/tree/melodic)):
 
 ```
 git clone https://github.com/care-group/Virtual-RALT-Standalone.git
@@ -76,6 +76,8 @@ roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true robot:=steel
 ```
 roslaunch virtual_ralt_standalone virtual_ralt_standalone.launch
 ```
+
+4. (First time test only) run the hello TIAGo example, familiarise yourself with the interface (TODO)
 
 ## Change protocol
 
