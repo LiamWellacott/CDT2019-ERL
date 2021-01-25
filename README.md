@@ -17,9 +17,7 @@ In addition to the code available in this repo we have produced a [demonstration
 
 ```
 mkdir -p ~/catkin_ws/src
-cd ~/catkin_ws/
-catkin_make
-cd src
+cd ~/catkin_ws/src
 ```
 3. Clone this repo into the ``src`` directory
 
@@ -31,8 +29,6 @@ cd src
 ```
 git clone https://github.com/care-group/Virtual-RALT-Standalone.git
 git clone https://github.com/LiamWellacott/mbot_simulation_environments.git
-cd ..
-catkin_make
 ```
 3. Install the TIAGo software. Below instructions adapted from [here](http://wiki.ros.org/Robots/TIAGo/Tutorials/Installation/TiagoSimulation).
 
@@ -40,12 +36,15 @@ catkin_make
 # if you haven't used rosinstall before you may have to run:
 sudo apt install python-rosinstall
 
-# download the file "tiago_public.rosinstall" into the workspace root
+# download the file "tiago_public.rosinstall" from  into ~/catkin_ws/
+cd ~/catkin_ws/
+nano tiago_public.rosinstall
+
+#Paste the copied content of [this](https://raw.githubusercontent.com/pal-robotics/tiago_tutorials/kinetic-devel/tiago_public-melodic.rosinstall) page and save the file
 
 # in the root directory of the workspace (watch for the ROS distribution in the file name, make sure it matches what you downloaded)
 rosinstall src /opt/ros/melodic tiago_public-melodic.rosinstall
 
-# not sure if this is needed for first build... source src/setup.bash
 
 # ensure you have the dependencies required to build
 sudo rosdep init
@@ -58,17 +57,17 @@ catkin_make
 ```
 ## Running
 
-1. Make sure the workspace is on the ros package path, check path with ``echo $ROS_PACKAGE_PATH``
+1. Make sure the workspace is on the ros package path, check path with ``echo $ROS_PACKAGE_PATH``. You should make sure to comment out any previous ROS Workspaces that may be sourced in your ``~.bashrc``.
 
+You may want to add it to ``~/.bashrc`` to avoid having to do it for each terminal.
 ```
-# may want to add it to ~/.bashrc to avoid having to do it for each terminal
 source {path to workspace}/devel/setup.bash
 ```
 
 2. (First time test only) You can launch the default robot sim with:
 
 ```
-roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true robot:=steel
+roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true robot:=titanium
 ```
 
 3. (First time test only) You can launch the virtual environment with:
@@ -78,6 +77,16 @@ roslaunch virtual_ralt_standalone virtual_ralt_standalone.launch
 ```
 
 4. (First time test only) run the hello TIAGo example, familiarise yourself with the interface (TODO)
+
+### If the Robot Model does not load...
+If there are issues with ``ModuleNotFoundError: No module named 'rospkg'``
+
+Check the version of Python that you have installed using
+```
+python --version
+echo $ROS_PYTHON_VERSION
+```
+The ``python --version`` should return ``Python 2.7.17``, and the ``echo $ROS_PYTHON_VERSION`` should return ``2``.
 
 ## Change protocol
 
