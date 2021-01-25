@@ -19,7 +19,7 @@ In addition to the code available in this repo we have produced a [demonstration
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 ```
-3. Clone this repo into the ``src`` directory
+3. Clone this repo into the ``src`` directory.
 
 ### After cloning this repo
 
@@ -39,12 +39,11 @@ sudo apt install python-rosinstall
 # download the file "tiago_public.rosinstall" from  into ~/catkin_ws/
 cd ~/catkin_ws/
 nano tiago_public.rosinstall
+```
+Paste the copied content of [this](https://raw.githubusercontent.com/pal-robotics/tiago_tutorials/kinetic-devel/tiago_public-melodic.rosinstall) page and save the file in the root directory of the workspace (watch for the ROS distribution in the file name, make sure it matches what you downloaded)
 
-#Paste the copied content of [this](https://raw.githubusercontent.com/pal-robotics/tiago_tutorials/kinetic-devel/tiago_public-melodic.rosinstall) page and save the file
-
-# in the root directory of the workspace (watch for the ROS distribution in the file name, make sure it matches what you downloaded)
+```
 rosinstall src /opt/ros/melodic tiago_public-melodic.rosinstall
-
 
 # ensure you have the dependencies required to build
 sudo rosdep init
