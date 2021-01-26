@@ -136,7 +136,7 @@ git add tutorial.txt
 You can replace ``tutorial.txt`` with the file or folder you are adding. Now that all your files that you wish to upload are tracked, you then need to commit them.
 
 ```
-git commit -m "This is a breif explanation of what has been changed."
+git commit -m "This is a brief explanation of what has been changed."
 ```
 To upload the commit, use ``push``.
 ```
