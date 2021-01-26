@@ -39,8 +39,6 @@ To pull use ``fetch``, this will also create all the other branches.
 git fetch upstream
 ```
 
-
-
 ### After cloning this repo
 
 1. ``cd`` to the ``src`` folder of the workspace, from the previous steps you should be there already
@@ -110,6 +108,47 @@ The ``python --version`` should return ``Python 2.7.17``, and the ``echo $ROS_PY
 ## Change protocol
 
 **You must have your own fork to contribute to the project**, we will use a pull request model for managing contributions each change must be reviewed before merging is allowed.
+
+Here is a step by step for how to contribute to this repo. You start off having cloned a fork of the repo in to your workspace.
+```
+cd CDT2019-ERL/
+git fetch upstream
+```
+The ```fetch``` is important to ensure your copy (fork) is up to date.
+
+Next, you want to work on a branch of your fork. A branch is a subsection where you copy your fork but you can carry out experimental work and discard it or merge it with your main fork without polluting the original.
+
+To create a branch in your own fork, use ``branch``
+```
+git checkout -b tutorial
+```
+Where ``-b`` creates the local branch and checks it out at the same time. Remove ``-b`` if your branch already exists. You are now working on a branch and any changes you make will remain in this branch of the code until you ``merge`` the branches.
+Now you can make whatever changes you like to the subsection or subsection you are working on.
+When you have done some work (But not too much! Make sure to commit regularly), you need to ``add``, ``commit`` and ``push`` the work to be able to upload it to your branch online.
+You can check and see what is different between your local (your PC) and the branch you are working on.
+```
+git status
+```
+Then you have to add the files that are untracked that you want to upload.
+```
+git add tutorial.txt
+```
+You can replace ``tutorial.txt`` with the file or folder you are adding. Now that all your files that you wish to upload are tracked, you then need to commit them.
+
+```
+git commit -m "This is a brief explanation of what has been changed."
+```
+To upload the commit, use ``push``.
+```
+git push origin tutorial
+```
+You should now see your forked copy of the project with a branch named ``tutorial`` that contains all your changes. The next step is to ``merge`` the work using a ``pull request``. The easiest way to do this is to go to github and look at your forked repo and click create a new pull request, where the "base" is what you are adding to and the "head" is what you have been working on. In this case, the base is ``main`` and the head to compare is ``tutorial``.  
+As long as there are no conflicts with the base branch, you should be able to merge the pull request. Your main should now reflect the files you have added or changed to the branch you made and that branch can be closed.
+
+The subsequent step is to create a new pull request to merge your forked repo and the original CDT2019-ERL Repo that is held by Liam. The steps are the same but the base is ``LiamWellacot/CDT2019-ERL`` and the head is ``{git_username}/CDT2019-ERL`` and the merge is occuring on the ``main`` branches. This pull request then has to be granted by the owner of the ``base`` repo. In this case, it is Liam. Once the merge has been completed, your work is successfully available to all other collaborators!
+
+Don't forget to ``git fetch upstream`` to ensure you have an up to date repo before you work on your fork.
+
 
 ## Info/useful links for team members
 
