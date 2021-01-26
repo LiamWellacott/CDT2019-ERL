@@ -21,6 +21,22 @@ cd ~/catkin_ws/src
 ```
 3. Clone this repo into the ``src`` directory.
 
+### Cloning the repo:
+
+1. Fork the repo on your github acount.
+2. clone your fork localy.
+3. Set the upstream repo. This will allow you to pull the latest changes from the main repo
+```
+git remote add upstream https://github.com/LiamWellacott/CDT2019-ERL.git
+```
+
+To pull just do, this will also create all the other branches.
+```
+git fetch upstream
+```
+
+
+
 ### After cloning this repo
 
 1. ``cd`` to the ``src`` folder of the workspace, from the previous steps you should be there already
@@ -101,5 +117,7 @@ The ``python --version`` should return ``Python 2.7.17``, and the ``echo $ROS_PY
 - The main source of information is the [consumer page of the competition website](https://www.eu-robotics.net/robotics_league/erl-consumer/about/index.html), here you can find the [rulebook](https://www.eu-robotics.net/robotics_league/upload/documents-2018/ERL_Consumer_10092018.pdf) which contains detailed descriptions of the tasks to be completed. Some additional information on the [test environments](https://www.eu-robotics.net/robotics_league/erl-consumer/certified-test-beds/index.html) and specifically the [Edinburgh test environment](https://www.eu-robotics.net/robotics_league/upload/documents-2017/ERL-SR_TestBedCertificationForm_HWU_web.pdf)
 - Home page for the [Edinburgh assisted living testbed](https://ralt.hw.ac.uk/)
 - Some notes on possible [tools/algorithms](https://heriotwatt.sharepoint.com/sites/CDT2019-ERL/_layouts/15/doc.aspx?sourcedoc={c50ef375-786c-45bd-8ff7-3e8696c3442a}&action=edit) which may be useful for coming up with a solution.
+
+
 
 
