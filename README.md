@@ -105,7 +105,7 @@ echo $ROS_PYTHON_VERSION
 ```
 The ``python --version`` should return ``Python 2.7.17``, and the ``echo $ROS_PYTHON_VERSION`` should return ``2``.
 
-## Collaborative protocol
+## Change protocol
 
 **You must have your own fork to contribute to the project**, we will use a pull request model for managing contributions each change must be reviewed before merging is allowed.
 
