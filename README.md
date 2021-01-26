@@ -24,13 +24,17 @@ cd ~/catkin_ws/src
 ### Cloning the repo:
 
 1. Fork the repo on your github acount.
-2. clone your fork localy.
+2. Clone your fork locally in your ``src`` directory.
+```
+git clone https://github.com/{git_username}/CDT2019-ERL
+```
 3. Set the upstream repo. This will allow you to pull the latest changes from the main repo
 ```
+cd CDT2019-ERL/
 git remote add upstream https://github.com/LiamWellacott/CDT2019-ERL.git
 ```
 
-To pull just do, this will also create all the other branches.
+To pull use ``fetch``, this will also create all the other branches.
 ```
 git fetch upstream
 ```
