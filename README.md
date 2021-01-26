@@ -81,19 +81,13 @@ You may want to add it to ``~/.bashrc`` to avoid having to do it for each termin
 source {path to workspace}/devel/setup.bash
 ```
 
-2. (First time test only) You can launch the default robot sim with:
+2. (First time test only) You can launch the robot sim with:
 
 ```
-roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true robot:=titanium
+roslaunch hello_tiago base_ralt_tiago.launch
 ```
 
-3. (First time test only) You can launch the virtual environment with:
-
-```
-roslaunch virtual_ralt_standalone virtual_ralt_standalone.launch
-```
-
-4. (First time test only) run the hello TIAGo example, familiarise yourself with the interface (TODO)
+3. To run the simulation run (TODO):
 
 ### If the Robot Model does not load...
 If there are issues with ``ModuleNotFoundError: No module named 'rospkg'``
