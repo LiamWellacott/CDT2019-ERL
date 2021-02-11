@@ -4,7 +4,7 @@ To Commit:
 
     1. Apply all the changes on the image. Write the code, Compile etc.
 
-    2. 
+    2.
         ```
         sudo docker ps -a
         ```
@@ -26,5 +26,17 @@ To Commit:
 
 
 To remove docker images:
-
+    ```
      docker rmi -f $(docker images --filter "dangling=true" -q --no-trunc)  
+    ```
+
+To have GUI run in host :
+    ```
+    xhost +si:local
+    ```
+
+Cmake for dlib worked when adding
+
+if (NOT CUDA_CUBLAS_LIBRARIES)
+   set(CUDA_CUBLAS_LIBRARIES /usr/local/cuda/lib64/libcublas.so)
+endif()

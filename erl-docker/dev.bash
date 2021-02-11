@@ -20,6 +20,6 @@ docker run -it \
     --volume="$XAUTH:$XAUTH" \
     --runtime=nvidia \
     --volume="`pwd`../..:/erl-ws/src/erl:rw" \
-    docker_test:latest \
+    erl/base \
     dev-erl
     bash
