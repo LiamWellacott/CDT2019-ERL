@@ -8,6 +8,10 @@ The tiago simulation packages implement the ROS navigation stack. A map must be 
 
 The navigation module provides the following services to the rest of the system
 
-## NavigateTo
+### NavigateTo
 
 A goal pose is given as input, the navigation module requests the tiago navigation stack to move the robot to this pose. 
+
+## TODO
+
+- The module probably should be an action server, but I spent too much time struggling with basic things to fix it.
