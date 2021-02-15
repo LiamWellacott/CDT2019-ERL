@@ -10,6 +10,7 @@ from navigation.srv import NavigateTo, NavigateToResponse
 from move_base_msgs.msg import MoveBaseGoal, MoveBaseAction
 from actionlib_msgs.msg import GoalStatusArray
 from geometry_msgs.msg import PoseWithCovarianceStamped, Pose
+from std_msgs.msg import Bool
 
 IDLE = 0
 EXPLORING = 1
@@ -28,7 +29,9 @@ class Navigation:
         self.robot_pose = Pose()
         s = rospy.Service('navigate_to', NavigateTo, self.setNavigate)
 
-        # sub
+        # pub/sub
+        self.nav_done_pub = rospy.Publisher('nav_done', Bool, queue_size=10)
+
         rospy.Subscriber('robot_pose', PoseWithCovarianceStamped, self._pose_callback)
 
         # NavigateTo
@@ -100,7 +103,9 @@ class Navigation:
         
             if dist < 0.2: # 0.2 value comes from YAML file for the local planner and is the xy_goal_tollerance     
 
-                # notify system of success/failure TODO
+                # notify system of success/failure
+                # failure will only be available if the interface with move_base is fixed
+                self.nav_done_pub.publish(True)
                 rospy.loginfo("Nav done!")
 
                 # reset nav state machine
