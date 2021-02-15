@@ -72,6 +72,20 @@ rosdep install --from-paths src --ignore-src -y --rosdistro melodic --skip-keys=
 # build
 catkin_make
 ```
+4. clone the RSBB ROS communication repo into your src folder:
+```
+git clone https://github.com/rockin-robot-challenge/at_home_rsbb_comm_ros.git
+cd at_home_rsbb_comm_ros
+# make sure you do the following or catkin_make will fail
+# a repo with a very similar name is a submodule of this repo
+# make sure to rerun this if you ever update this repo
+git submodule update --init
+
+cd ../..
+catkin_make
+```
+
+
 ## Running
 
 1. Make sure the workspace is on the ros package path, check path with ``echo $ROS_PACKAGE_PATH``. You should make sure to comment out any previous ROS Workspaces that may be sourced in your ``~.bashrc``.

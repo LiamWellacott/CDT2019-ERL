@@ -1,0 +1,11 @@
+<launch>
+    <arg name="x" default="10.0"/> <!-- TODO set to starting location for the scenario in robot frame-->
+    <arg name="y" default="10.0"/>
+
+    <include file="$(find roah_rsbb_comm_ros)/launch/test.launch"/>
+
+    <node name="call_rostopic" pkg="rostopic" type="rostopic" args='pub /roah_rsbb/tablet/call std_msgs/Empty "{}" ' />
+
+    <node name="position_rostopic" pkg="rostopic" type="rostopic" args='pub /roah_rsbb/tablet/position geometry_msgs/Pose2D "{x: $(arg x), y: $(arg y), theta: 0.0}" ' />
+
+</launch>
