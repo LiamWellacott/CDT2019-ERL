@@ -12,11 +12,14 @@ from actionlib_msgs.msg import GoalStatusArray
 from geometry_msgs.msg import PoseWithCovarianceStamped, Pose
 from std_msgs.msg import Bool
 
-IDLE = 0
-EXPLORING = 1
-NAVIGATING = 2
-FOLLOWING = 3
-GUIDING = 4
+from enum import Enum
+
+class State(Enum):
+    IDLE = 0
+    EXPLORING = 1
+    NAVIGATING = 2
+    FOLLOWING = 3
+    GUIDING = 4
 
 class Navigation:
 
@@ -47,26 +50,26 @@ class Navigation:
         self.robot_pose = msg.pose.pose
 
     def _reset(self):
-        self.state = IDLE
+        self.state = State.IDLE
         self.goal_pose = None
         
         self.move_base_request_sent = False
 
     ### service functions
     def setExplore(self):
-        self.state = EXPLORING
+        self.state = State.EXPLORING
 
     def setNavigate(self, msg):
         self._reset()
-        self.state = NAVIGATING
+        self.state = State.NAVIGATING
         self.goal_pose = msg.pose
         return NavigateToResponse(True)
 
     def setFollow(self):
-        self.state = FOLLOWING
+        self.state = State.FOLLOWING
 
     def setGuide(self):
-        self.state = GUIDING
+        self.state = State.GUIDING
 
     ### state based logic
     def explore(self):
@@ -122,13 +125,13 @@ class Navigation:
         # check collisions TODO
 
         # execute behaviour
-        if self.state == EXPLORING:
+        if self.state == State.EXPLORING:
             self.explore()
-        elif self.state == NAVIGATING:
+        elif self.state == State.NAVIGATING:
             self.navigate()
-        elif self.state == FOLLOWING:
+        elif self.state == State.FOLLOWING:
             self.follow()
-        elif self.state == GUIDING:
+        elif self.state == State.GUIDING:
             self.guide()
 
 def main():
