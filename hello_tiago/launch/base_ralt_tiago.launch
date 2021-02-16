@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <launch>
   <arg name="world_name" default="virtual_ralt_standalone.world"/>
+  <!-- <arg name="world_name" default="virtual_ralt_basic.world"/> -->
   <arg name="world_path" default="$(find virtual_ralt_standalone)/worlds"/>
 
   <arg name="robot"  default="titanium"/>
@@ -11,8 +12,9 @@
   <arg name="camera_model"  default="orbbec-astra"/>
   <arg name="multi" default=""/>
   <arg name="gzpose" default="-x -9.0 -y 2.0 -z 0.8 -R 0.0 -P 0.0 -Y -1.5708"/>
+  <!-- <arg name="gzpose" default="-x -0.75 -y 2.25 -z 0.01 -R 0.0 -P 0.0 -Y -1.5708"/> -->
   <arg name="debug" default="false"/>
-  <arg name="public_sim" default="false"/>
+  <arg name="public_sim" default="true"/>
   <arg name="tuck_arm" default="true"/>
   <arg name="recording" default="false"/>
   <arg name="extra_gazebo_args" default=""/>
