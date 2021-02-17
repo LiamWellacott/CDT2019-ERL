@@ -4,10 +4,13 @@
   <arg name="rviz"  default="true"/>
   <!-- Call the sim environment -->
   <include file="$(find hello_tiago)/launch/base_ralt_tiago.launch" >
-      <arg name="gzpose" value="-x -9.0 -y 2.0 -z 0.8 -R 0.0 -P 0.0 -Y -1.5708"/>
-      <arg name="robot" value="steel"/> 
+      <arg name="gzpose" value="-x -3.5 -y 1.0 -z 0.8 -R 0.0 -P 0.0 -Y 0.0"/>
+      <arg name="robot" value="steel"/>
+      <arg name="use_moveit_camera" value="true"/> 
   </include>
 
+  <!-- push table_description to factory and spawn robot in gazebo -->
+  <node name="spawn_coke_can" pkg="gazebo_ros" type="spawn_model" args="-sdf -file $(env HOME)/.gazebo/models/coke_can/model.sdf -x -2.7 -y 1.0 -z 1.76 -R 0.0 -P 0.0 -Y 0.0 -model coke_can_model" respawn="false" output="screen" />
 
   <!-- marker detector -->
   <node pkg="aruco_ros" type="single"  name="aruco_single">
