@@ -22,8 +22,7 @@ moveit_error_dict = {}
 for name in MoveItErrorCodes.__dict__.keys():
     if not name[:1] == '_':
         code = MoveItErrorCodes.__dict__[name]
-        moveit_error_dict[code] = name
-
+        moveit_error_dict[code] = name 
 
 
 
@@ -51,7 +50,6 @@ class ManipulationServer(object):
         self.play_motion_client.wait_for_server()
 
         self.goal = PlayMotionGoal()
-        self.goal.motion_name = 'unfold_arm'
         self.goal.skip_planning = False
         self.goal.priority = 0  # Optional
 
@@ -61,10 +59,20 @@ class ManipulationServer(object):
         self.req_goal = PickUpPoseGoal()
         self.req_goal.object_pose.header.frame_id = "base_footprint"
 
+
+        # # Get the cheezits size
+        # self.object_height = 0.06
+        # self.object_width = 0.158
+        # self.object_depth = 0.21
+
+
         rospy.loginfo("Ready to manipulate!")
 
-    def unfold_arm(self):
+
+
+    def play_motion(self, motion_name):
         rospy.loginfo("Sending goal")
+        self.goal.motion_name = motion_name
         self.play_motion_client.send_goal(self.goal)
 
         rospy.loginfo("Waiting for result...")
@@ -73,13 +81,22 @@ class ManipulationServer(object):
         state = self.play_motion_client.get_state()
 
         if action_ok:
-            rospy.loginfo("Arm unfolded succesfully")
+            rospy.loginfo(motion_name + " succesfully")
         else:
-            rospy.logwarn("Arm unfold failed")
+            rospy.logwarn(motion_name + " failed")
+
+
+    def unfold_arm(self):
+        self.play_motion("unfold_arm")
+
+
+    def tuck_arm(self):
+        self.play_motion("home")
+
 
     def _reset(self):
         self.state = State.IDLE
-        #reset req goal
+
 
     def setPick(self, msg):
         self._reset()
@@ -102,6 +119,10 @@ class ManipulationServer(object):
         else:
             rospy.logerr("Failed to pick, not trying further")
 
+        #Fold the arm back to a neutral position
+        self.tuck_arm()
+
+        #Set state to idle
         self._reset()    
 
         
