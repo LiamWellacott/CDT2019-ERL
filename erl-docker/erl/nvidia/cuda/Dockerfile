@@ -26,6 +26,34 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN mkdir -p /root/.config/terminator/
 COPY assets/terminator_config /root/.config/terminator/config
 
+
+# Install packages
+RUN apt-get update && apt-get install -y \
+locales \
+lsb-release \
+mesa-utils \
+git \
+subversion \
+nano \
+terminator \
+xterm \
+wget \
+curl \
+htop \
+libssl-dev \
+build-essential \
+dbus-x11 \
+software-properties-common \
+gdb valgrind && \
+apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install cmake 3.15.5
+RUN git clone https://gitlab.kitware.com/cmake/cmake.git && \
+    cd cmake && git checkout tags/v3.15.5 && \
+    ./bootstrap --parallel=8 && \
+    make -j8 && \
+    make install
+
 # Entry script - This will also run terminator
 COPY assets/entrypoint_setup.sh /
 ENTRYPOINT ["/entrypoint_setup.sh"]
