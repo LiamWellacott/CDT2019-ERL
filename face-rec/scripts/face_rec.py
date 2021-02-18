@@ -27,6 +27,8 @@ class face_rec_node(object):
         self.known_enco = []
         self.known_name = []
         self.process_this_frame = True
+        self.process_frame = 2
+
         dir = rospack.get_path("face-rec")
         self.init_known(os.path.join(dir, "faces", "known"))
 
@@ -48,7 +50,7 @@ class face_rec_node(object):
         for face_file in files:
             img = fr.load_image_file(face_file)
             # want a width of 128 to speed up the process, be sure not to run out of memory.
-            scale = float(img.shape[1])/640.
+            scale = float(img.shape[1])/480.
             small_frame = cv2.resize(img, (0, 0), fx=1./scale, fy=1./scale)
 
             self.known_name.append(self.get_name(face_file))
@@ -62,12 +64,11 @@ class face_rec_node(object):
 
     def recognise_person(self, msg):
         if self.process_this_frame:
-            cv_img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='passthrough')
+            cv_img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='rgb8')
             frame = np.asarray(cv_img)
             scale=2
             small_frame = cv2.resize(frame, (0, 0), fx=1./float(scale), fy=1./float(scale))
             # convert back to RGB, cv uses BGR conventiion.
-            small_frame = small_frame[:, :, ::-1]
 
             face_loc = fr.face_locations(small_frame, model='cnn')
             rospy.loginfo("Face-rec: {} face detected ".format(len(face_loc)))
@@ -89,9 +90,10 @@ class face_rec_node(object):
 
             render = self.overlay(frame, face_loc, face_names, scale)
 
-            self.render = self.bridge.cv2_to_imgmsg(render)
+            self.render = self.bridge.cv2_to_imgmsg(render, encoding="rgb8")
 
         self.process_this_frame = not self.process_this_frame
+        #self.process_this_frame %= self.process_frame
 
         self.face_rec_pub.publish(self.render)
 
@@ -104,13 +106,43 @@ class face_rec_node(object):
             bottom *= scale
             left *= scale
 
+            w =frame.shape[0]
+            h =frame.shape[1]
+            pad_w = 20
+            pad_h = 50
             # Draw a box around the face
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+            if top < pad_h:
+                top_box = 0
+            else:
+                top_box = top - pad_h
+
+            if bottom + pad_h >= h:
+                bottom_box = h-1
+            else:
+                bottom_box = bottom + pad_h
+
+            if left < pad_w:
+                left_box = 0
+            else:
+                left_box = left - pad_w
+
+            if right + pad_w >= w:
+                right_box = w-1
+            else:
+                right_box = right + pad_w
+
+            if name == "Unkown":
+                cv2.rectangle(frame, (left_box, top_box), (right_box, bottom_box), (255, 0, 0), 2)
+                cv2.rectangle(frame, (left_box, bottom_box - 35), (right_box, bottom_box), (255, 0, 0), cv2.FILLED)
+
+            else:
+                cv2.rectangle(frame, (left_box, top_box), (right_box, bottom_box), (0, 0, 255), 2)
+                cv2.rectangle(frame, (left_box, bottom_box - 35), (right_box, bottom_box), (0, 0, 255), cv2.FILLED)
 
             # Draw a label with a name below the face
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+            cv2.putText(frame, name, (left_box + 6, bottom_box - 6), font, 1.0, (255, 255, 255), 1)
+
         return frame
 
     def track_person(self, msg):
