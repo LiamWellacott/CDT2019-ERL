@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 XAUTH=/tmp/.docker.xauth-n
 if [ ! -f $XAUTH ]
@@ -20,6 +21,6 @@ docker run -it \
     --volume="$XAUTH:$XAUTH" \
     --runtime=nvidia \
     --volume="`pwd`../..:/erl-ws/src/erl:rw" \
-    erl/base \
-    dev-erl
-    bash
+    --device /dev/video0 \
+    erl/tiago-melodic:gpu \
+    bin/bash
