@@ -22,5 +22,5 @@ docker run -it \
     --runtime=nvidia \
     --volume="`pwd`../..:/erl-ws/src/erl:rw" \
     --device /dev/video0 \
-    erl/tiago-melodic:gpu \
+    erl/base:gpu \
     bin/bash
