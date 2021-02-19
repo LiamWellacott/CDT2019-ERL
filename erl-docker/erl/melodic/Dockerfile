@@ -1,4 +1,7 @@
-FROM erl/nvidia:cudagl-cudnn
+FROM erl/ros-melodic:nvidia-tensorflow
+
+RUN cmake --version
+
 
 MAINTAINER Athanasios Tasoglou <athanasios@tasoglou.net>
 LABEL Description="ROS-Melodic-Desktop (Ubuntu 18.04)" Vendor="TurluCode" Version="1.1"
@@ -7,30 +10,6 @@ LABEL com.turlucode.ros.version="melodic"
 # Install packages without prompting the user to answer any questions
 ENV DEBIAN_FRONTEND noninteractive
 
-# Install packages
-RUN apt-get update && apt-get install -y \
-locales \
-lsb-release \
-mesa-utils \
-git \
-subversion \
-nano \
-terminator \
-xterm \
-wget \
-curl \
-htop \
-libssl-dev \
-build-essential \
-dbus-x11 \
-software-properties-common \
-gdb valgrind && \
-apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install cmake 3.15.5
-RUN git clone https://gitlab.kitware.com/cmake/cmake.git && \
-cd cmake && git checkout tags/v3.15.5 && ./bootstrap --parallel=8 && make -j8 && make install && \
-cd .. && rm -rf cmake
 
 RUN apt-get update && apt-get install -y automake autoconf pkg-config libevent-dev libncurses5-dev bison && \
 apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -69,5 +48,5 @@ RUN echo "export ROSLAUNCH_SSH_UNKNOWN=1" >> /root/.bashrc
 RUN echo "source /opt/ros/melodic/setup.zsh" >> /root/.zshrc
 RUN echo "export ROSLAUNCH_SSH_UNKNOWN=1" >> /root/.zshrc
 
-# ---
-CMD ["terminator"]
+
+RUN cmake --version
