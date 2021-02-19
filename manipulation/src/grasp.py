@@ -87,7 +87,7 @@ class ManipulationServer(object):
 
 
     def unfold_arm(self):
-        self.play_motion("unfold_arm")
+        self.play_motion("safe_unfold")
 
 
     def tuck_arm(self):

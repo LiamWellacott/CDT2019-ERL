@@ -4,7 +4,7 @@
   <arg name="rviz"  default="true"/>
   <!-- Call the sim environment -->
   <include file="$(find hello_tiago)/launch/base_ralt_tiago.launch" >
-      <arg name="gzpose" value="-x -3.5 -y 1.0 -z 0.8 -R 0.0 -P 0.0 -Y 0.0"/>
+      <arg name="gzpose" value="-x -3.55 -y 1.0 -z 0.8 -R 0.0 -P 0.0 -Y 0.0"/>
       <arg name="robot" value="steel"/>
       <arg name="use_moveit_camera" value="true"/> 
   </include>
@@ -25,6 +25,8 @@
       <param name="corner_refinement"  value="SUBPIX" />
   </node>
 
+  <!-- Load our pregrasp motion -->
+  <rosparam command="load" file="$(find manipulation)/config/motions/tiago_motions.yaml"/>
   <!-- Load definition of pregrasp motion into play_motion namespace -->
   <rosparam command="load" file="$(find tiago_pick_demo)/config/pick_motions.yaml" /> 
 
@@ -44,5 +46,7 @@
   </group>
 
   <node name="grasp_service" pkg="manipulation" type="grasp.py" output="screen"/>
+  <node name="octomap_rethrottle" pkg="topic_tools" type="throttle" args="messages /xtion/depth_registered/points 2  /throttle_filtering_points/filtered_points" />
+  <node name="look_around" pkg="play_motion" type="run_motion" args="head_tour" />
 
 </launch>
