@@ -46,6 +46,15 @@ class InferenceServer():
 		self.inference_image = CompressedImage()
 		self.firstInference()
 		self._as.start();
+	        rospy.loginfo("Loading the inference models...........")
+		inference_model = rospy.get_param('~model_name')
+		tf_models_path = rospy.get_param('~tf_models_path')
+		model_database_path = rospy.get_param('~model_database_path')
+
+		object_detection = ObjectDetectionAPI(model_name = inference_model, path_to_the_model_database = model_database_path, path_to_tf_models = tf_models_path)
+
+		sub_topic = "/xtion/rgb/image_raw/compressed"
+		pub_topic = "/inference_image/image_raw/compressed"
 		rospy.loginfo("Inference action server running!!")
 		rospy.loginfo("Change inference model server is online!")
 
@@ -119,14 +128,6 @@ class InferenceServer():
 
 if __name__ == '__main__':
 	rospy.init_node('inference_action_server_node', anonymous=True)
-	rospy.loginfo("Loading the inference models...........")
-	inference_model = rospy.get_param('~model_name')
-	tf_models_path = rospy.get_param('~tf_models_path')
-	model_database_path = rospy.get_param('~model_database_path')
 
-	object_detection = ObjectDetectionAPI(model_name = inference_model, path_to_the_model_database = model_database_path, path_to_tf_models = tf_models_path)
-
-	sub_topic = "/xtion/rgb/image_raw/compressed"
-	pub_topic = "/inference_image/image_raw/compressed"
 	server = InferenceServer(sub_topic, pub_topic)
 	rospy.spin()
