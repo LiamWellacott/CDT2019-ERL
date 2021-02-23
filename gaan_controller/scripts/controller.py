@@ -6,6 +6,8 @@ from navigation.srv import NavigateTo
 from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import Pose2D, Pose
 
+from tf.transformations import quaternion_from_euler
+
 from enum import Enum
 
 class State(Enum):
@@ -34,9 +36,6 @@ class Controller(object):
         self.job_done = False # flag to indacate when service has finished (action server would improve)
 
         self.goal_pose = Pose()
-        self.goal_pose.orientation.x = 0.0
-        self.goal_pose.orientation.y = 0.0
-        self.goal_pose.orientation.w = 1.0
 
         # TODO reset arm
 
@@ -64,7 +63,12 @@ class Controller(object):
     def _setSummonLocation(self, msg):
         self.goal_pose.position.x = msg.x
         self.goal_pose.position.y = msg.y
-        self.goal_pose.orientation.z = msg.theta
+
+        q = quaternion_from_euler(0.0, 0.0, msg.theta)
+        self.goal_pose.orientation.x = q[0]
+        self.goal_pose.orientation.y = q[1]
+        self.goal_pose.orientation.z = q[2]
+        self.goal_pose.orientation.w = q[3]
 
         self.state = State.SUMMONED
 
@@ -76,6 +80,7 @@ class Controller(object):
         rospy.loginfo("WHO SUMMONS ME")
 
         # Send navigation request and wait until arrived
+        rospy.loginfo(self.goal_pose.orientation)
         self.navigate_to(self.goal_pose)
         self._wait_for('nav_done')
 
@@ -84,6 +89,9 @@ class Controller(object):
 
     def receiveInstruction(self):
         rospy.loginfo("COMMAND ME ANNIE")
+
+        # TODO conversation logic
+        
         return #TODO 
 
     def fetching(self):
