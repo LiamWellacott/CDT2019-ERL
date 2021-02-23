@@ -94,6 +94,7 @@ cd ../..
 catkin_make
 ```
 
+5. In order for the robot to path through doors you must reduce the `inflation_radius` and `inflation_dist` parameter in the tiago planner configuration. This reduces the distance from an obstacle (e.g. furniture, door, wall) the robot is willing to cross. TODO create a script to do this or find a better way... You can find `inflation_radius` in `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/common/global_costmap_public_sim.yaml` and `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/common/local_costmap_public_sim.yaml`. You can find `inflation_dist` in `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/teb/local_planner.yaml`. I set the value to `0.15`.
 
 ## Running
 
