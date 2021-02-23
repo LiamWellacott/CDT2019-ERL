@@ -34,9 +34,18 @@ cd CDT2019-ERL/
 git remote add upstream https://github.com/LiamWellacott/CDT2019-ERL.git
 ```
 
-To pull use ``fetch``, this will also create all the other branches.
+To update your local copy use ``fetch``, this will download branches etc. from the main repo.
 ```
 git fetch upstream
+```
+
+To bring changes from the main repo into your repo (using the example of the main branch do:
+```
+# make sure you are on the branch you want to merge into locally
+git merge upstream/main
+
+# To push the result of the merge to your fork
+git push
 ```
 
 ### After cloning this repo
