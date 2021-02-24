@@ -22,5 +22,7 @@ docker run -it \
     --runtime=nvidia \
     --volume="`pwd`../..:/erl-ws/src/erl:rw" \
     --device /dev/video0 \
+    -p 5000:5000 \
+    --name erl \
     erl/base:gpu \
     bin/bash
