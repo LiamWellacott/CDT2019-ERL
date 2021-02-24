@@ -49,4 +49,8 @@ RUN echo "source /opt/ros/melodic/setup.zsh" >> /root/.zshrc
 RUN echo "export ROSLAUNCH_SSH_UNKNOWN=1" >> /root/.zshrc
 
 
+RUN apt update && \
+    apt install ros-melodic-camera-info-manager-py -y && \
+    apt install ros-melodic-vision-msgs -y
+
 RUN cmake --version
