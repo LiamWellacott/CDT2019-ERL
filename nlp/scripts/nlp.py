@@ -1,4 +1,9 @@
+#!/usr/bin/env python
+
 import logging
+
+import rospy
+from std_msgs.msg import String
 
 from random import randint
 
@@ -13,30 +18,34 @@ ask = Ask(app, "/")
 
 logging.getLogger("flask_ask").setLevel(logging.DEBUG)
 
+rospy.init_node("nlp", anonymous=True)
+rate = rospy.Rate(10)
+resp_pub = rospy.Publisher("/erl/nlp/resp", String, queue_size=10)
+cmd_pub = rospy.Publisher("/erl/nlp/command", String, queue_size=10)
+
+
 
 @ask.launch
 def new_game():
-
-    #welcome_msg = render_template('welcome')
-
-    return question("Welcome to memory game. I'm going to say three numbers for you to repeat backwards. Ready?")
+    welcome_msg = render_template('welcome')
+    publish(welcome_msg, "None")
+    return question(welcome_msg)
 
 
 @ask.intent("YesIntent")
 def next_round():
-
     numbers = [randint(0, 9) for _ in range(3)]
 
     round_msg = render_template('round', numbers=numbers)
-
     session.attributes['numbers'] = numbers[::-1]  # reverse
 
+    publish(round_msg, "YesIntend")
     return question(round_msg)
 
 
 @ask.intent("AnswerIntent", convert={'first': int, 'second': int, 'third': int})
 def answer(first, second, third):
-
+    global resp_msg, cmd_msg
     winning_numbers = session.attributes['numbers']
 
     if [first, second, third] == winning_numbers:
@@ -47,24 +56,39 @@ def answer(first, second, third):
 
         msg = render_template('lose')
 
+    resp=msg
+    cmd="First: " + str(first) + ", Second: " + str(second) +", third: "+ str(third)
+    publish(resp, cmd)
     return statement(msg)
 
 @ask.intent("Amazon.NavigateHomeIntent")
 def home():
+    publish("Home", "None")
     return statement("home.")
 
 @ask.intent("AMAZON.CancelIntent")
 def cancel():
+    publish("Cancel", "None")
     return statement("cancel.")
 
 @ask.intent("AMAZON.HelpIntent")
 def help():
+    publish("help", "None")
     return question("Help you? burk.")
 
 @ask.intent("AMAZON.StopIntent")
 def stop():
+    publish("Stop", "None")
     return statement("I'm not stopping for you!")
 
-if __name__ == '__main__':
+def publish(resp, cmd):
+    resp_msg = String(resp)
+    cmd_msg = String(cmd)
+    resp_pub.publish(resp_msg)
+    cmd_pub.publish(cmd_msg)
 
+def main():
     app.run(debug=True, host='0.0.0.0')
+
+if __name__ == '__main__':
+    main()
