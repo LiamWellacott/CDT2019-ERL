@@ -4,7 +4,7 @@ from random import randint
 
 from flask import Flask, render_template
 
-from flask_ask import Ask, statement, question, session
+from flask_ask import Ask, statement, question, session, convert_errors #Added convert_errors ~Emilyann
 
 
 app = Flask(__name__)
@@ -48,6 +48,41 @@ def answer(first, second, third):
         msg = render_template('lose')
 
     return statement(msg)
+
+@ask.intent("PickupIntent")
+def response(object):
+
+    msg = render_template('find', object=object)
+
+    session.attributes['object'] = object
+
+    return statement(msg)
+
+@ask.intent("ReadinessCommand")
+def introduce():
+
+    msg = render_template('intro')
+
+    return statement(msg)
+
+@ask.intent("FoundItem") ###Still using alexa confirmation - can delete this and use code here instead
+def found(object):
+
+    msg = render_template('found', object=object)
+
+    session.attributes['object'] = object
+
+    return statement(msg)
+
+@ask.intent("Handoff")
+def handoff(object):
+
+    msg = render_template('handoff', object=object)
+
+    session.attributes['object'] = object
+
+    return statement(msg)
+
 
 @ask.intent("Amazon.NavigateHomeIntent")
 def home():
