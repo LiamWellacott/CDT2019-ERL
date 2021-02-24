@@ -19,7 +19,7 @@ def new_game():
 
     #welcome_msg = render_template('welcome')
 
-    return question("Welcome to memory game. I'm going to say three numbers for you to repeat backwards. Ready?")
+    return question("")
 
 
 @ask.intent("YesIntent")
