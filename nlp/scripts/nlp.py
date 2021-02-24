@@ -4,7 +4,7 @@ from random import randint
 
 from flask import Flask, render_template
 
-from flask_ask import Ask, statement, question, session
+from flask_ask import Ask, statement, question, session, convert_errors #Added convert_errors ~Emilyann
 
 
 app = Flask(__name__)
@@ -48,6 +48,47 @@ def answer(first, second, third):
         msg = render_template('lose')
 
     return statement(msg)
+
+# @ask.intent("PickupIntent", convert={'object': str})
+# def response(object):
+
+#     msg = render_template(object)
+
+#     return statement(msg)
+
+# @ask.intent("ReadinessCommand")
+# def introduce():
+
+#     msg = render_template('I, Tiago, am ready to receive a command')
+
+#     return statement(msg)
+
+# @ask.intent("FoundItem", convert={'object': str})
+# def found():
+
+#     if 'object' in convert_errors:
+
+#         msg = render_template('I, Tiago, have found the item')
+
+#     else
+#         msg = render_template('I, Tiago, have found the {}'.format(object))
+    
+
+#     return statement(msg)
+
+# @ask.intent("Handoff", convert={'object': str})
+# def handoff():
+
+#     if 'object' in convert_errors:
+
+#         msg = render_template('Here is the item, Granny Annie')
+
+#     else
+#         msg = render_template('Here is the {} Granny Annie'.format(object))
+    
+
+#     return statement(msg)
+
 
 @ask.intent("Amazon.NavigateHomeIntent")
 def home():
