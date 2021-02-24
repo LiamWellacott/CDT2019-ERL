@@ -32,34 +32,18 @@ def new_game():
     return question(welcome_msg)
 
 
-@ask.intent("YesIntent")
-def next_round():
-    numbers = [randint(0, 9) for _ in range(3)]
-
-    round_msg = render_template('round', numbers=numbers)
-    session.attributes['numbers'] = numbers[::-1]  # reverse
-
-    publish(round_msg, "YesIntend")
-    return question(round_msg)
+@ask.intent("PlaceIntent", convert={"object": str}, default={"place": "bin"})
+def placeobj(object, place):
+    publish("Place object " + object + " in " + place, "None")
+    return
 
 
-@ask.intent("AnswerIntent", convert={'first': int, 'second': int, 'third': int})
-def answer(first, second, third):
-    global resp_msg, cmd_msg
-    winning_numbers = session.attributes['numbers']
+@ask.intent("PickupIntent", convert={"object":str})
+def pickup(object):
+    publish("Pickup object " + object)
+    return
 
-    if [first, second, third] == winning_numbers:
 
-        msg = render_template('win')
-
-    else:
-
-        msg = render_template('lose')
-
-    resp=msg
-    cmd="First: " + str(first) + ", Second: " + str(second) +", third: "+ str(third)
-    publish(resp, cmd)
-    return statement(msg)
 
 @ask.intent("Amazon.NavigateHomeIntent")
 def home():
