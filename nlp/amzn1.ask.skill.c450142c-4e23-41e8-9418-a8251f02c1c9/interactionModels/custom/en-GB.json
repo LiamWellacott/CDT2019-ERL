@@ -1,0 +1,197 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "granny annie",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "HelloWorldIntent",
+          "slots": [],
+          "samples": [
+            "hello",
+            "how are you",
+            "say hi world",
+            "say hi",
+            "hi",
+            "say hello world",
+            "say hello"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "pickup",
+          "slots": [
+            {
+              "name": "object",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "Bring me the {object}",
+            "bring me my {object}",
+            "can you bring me {object}",
+            "pick up the {object}"
+          ]
+        },
+        {
+          "name": "readinessCommand",
+          "slots": [],
+          "samples": [
+            "introduction",
+            "ready",
+            "how can I help you"
+          ]
+        },
+        {
+          "name": "foundItem",
+          "slots": [
+            {
+              "name": "object",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "found {object}",
+            "found item"
+          ]
+        },
+        {
+          "name": "handoff",
+          "slots": [
+            {
+              "name": "object",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "handoff {object}",
+            "handoff"
+          ]
+        }
+      ],
+      "types": []
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "pickup",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.1176917739324"
+          },
+          "slots": [
+            {
+              "name": "object",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ]
+        },
+        {
+          "name": "readinessCommand",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.229406344607"
+          },
+          "slots": []
+        },
+        {
+          "name": "foundItem",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.1217630746404"
+          },
+          "slots": [
+            {
+              "name": "object",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ]
+        },
+        {
+          "name": "handoff",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.824667826919"
+          },
+          "slots": [
+            {
+              "name": "object",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ]
+        }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Confirm.Intent.1176917739324",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "You\u0027d like me to bring you the {object} . Have I understood you correctly?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.824667826919",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Here is the item"
+          },
+          {
+            "type": "PlainText",
+            "value": "Here is the {object}"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.1217630746404",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "I have found the item"
+          },
+          {
+            "type": "PlainText",
+            "value": "I have found the {object}"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.229406344607",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Good morning Granny Annie, how can I help you?"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "8"
+}

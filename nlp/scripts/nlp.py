@@ -49,45 +49,39 @@ def answer(first, second, third):
 
     return statement(msg)
 
-# @ask.intent("PickupIntent", convert={'object': str})
-# def response(object):
+@ask.intent("PickupIntent")
+def response(object):
 
-#     msg = render_template(object)
+    msg = render_template('find', object=object)
 
-#     return statement(msg)
+    session.attributes['object'] = object
 
-# @ask.intent("ReadinessCommand")
-# def introduce():
+    return statement(msg)
 
-#     msg = render_template('I, Tiago, am ready to receive a command')
+@ask.intent("ReadinessCommand")
+def introduce():
 
-#     return statement(msg)
+    msg = render_template('intro')
 
-# @ask.intent("FoundItem", convert={'object': str})
-# def found():
+    return statement(msg)
 
-#     if 'object' in convert_errors:
+@ask.intent("FoundItem") ###Still using alexa confirmation - can delete this and use code here instead
+def found(object):
 
-#         msg = render_template('I, Tiago, have found the item')
+    msg = render_template('found', object=object)
 
-#     else
-#         msg = render_template('I, Tiago, have found the {}'.format(object))
-    
+    session.attributes['object'] = object
 
-#     return statement(msg)
+    return statement(msg)
 
-# @ask.intent("Handoff", convert={'object': str})
-# def handoff():
+@ask.intent("Handoff")
+def handoff(object):
 
-#     if 'object' in convert_errors:
+    msg = render_template('handoff', object=object)
 
-#         msg = render_template('Here is the item, Granny Annie')
+    session.attributes['object'] = object
 
-#     else
-#         msg = render_template('Here is the {} Granny Annie'.format(object))
-    
-
-#     return statement(msg)
+    return statement(msg)
 
 
 @ask.intent("Amazon.NavigateHomeIntent")
