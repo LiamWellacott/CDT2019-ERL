@@ -23,12 +23,13 @@ once = True # TODO required until NLP services can are available
 class Controller(object):
 
     def __init__(self):
+        rospy.loginfo("Initalizing controller")
         self.reset()
         self.isInit=False
         # subscribe to RSBB topics
         rospy.Subscriber('roah_rsbb/tablet/call', Empty, self._setSummoned)
         rospy.Subscriber('roah_rsbb/tablet/position', Pose2D, self._setSummonLocation)
-        nlp_service = rospy.Service('voc_cmd', self.receiveInstruction)
+        nlp_service = rospy.Service('voc_cmd', Command, self._vocal_commandCB)
         # prepare to call GAAN services
         self.navigate_to = rospy.ServiceProxy('navigate_to', NavigateTo)
 
@@ -40,6 +41,7 @@ class Controller(object):
         self.registerLocation('kitchen_island', -2.4, 1.8, 1.5708)
         self.registerLocation('coffee_table', 1.7, 2.6, 0.0)
         self.isInit=True
+        rospy.loginfo("Done")
 
     def registerLocation(self, location_tag, x, y, theta):
         self.sem_map[location_tag] = Pose()
@@ -98,6 +100,12 @@ class Controller(object):
     def _waitCB(self, msg):
         self.job_done = True
 
+    def _vocal_commandCB(self, req):
+        cmd = req
+        rospy.loginfo(cmd)
+        return CommandResponse("Done")
+
+
     ### Main functions
     def summoned(self):
         rospy.loginfo('WHO SUMMONS ME')
@@ -119,14 +127,8 @@ class Controller(object):
              return "could not speak."
 
     def receiveInstruction(self, req):
-        cmd = req
-        rospy.loginfo(cmd)
-        return CommandResponse("Done")
-
-
-        '''
         global once
-
+        # inti the vocal_command
         rospy.loginfo('COMMAND ME ANNIE')
 
         # TODO call nlp service to ask annie for instruction
@@ -158,7 +160,7 @@ class Controller(object):
             # annie is satisfied, we can rest and wait for further commands
             self.reset()
 
-            '''
+
 
     def fetching(self):
 
@@ -205,6 +207,6 @@ if __name__ == '__main__':
     con = Controller()
 
     rate = rospy.Rate(1)
-    while(True):
+    while not rospy.is_shutdown():
         con.step()
         rate.sleep()
