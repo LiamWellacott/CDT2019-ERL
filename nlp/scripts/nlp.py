@@ -50,7 +50,6 @@ def answer(first, second, third):
     return statement(msg)
 
 @ask.intent("PickupIntent")
-def response(object):
 
     msg = render_template('find', object=object)
 
