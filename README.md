@@ -34,9 +34,18 @@ cd CDT2019-ERL/
 git remote add upstream https://github.com/LiamWellacott/CDT2019-ERL.git
 ```
 
-To pull use ``fetch``, this will also create all the other branches.
+To update your local copy use ``fetch``, this will download branches etc. from the main repo.
 ```
 git fetch upstream
+```
+
+To bring changes from the main repo into your repo (using the example of the main branch do:
+```
+# make sure you are on the branch you want to merge into locally
+git merge upstream/main
+
+# To push the result of the merge to your fork
+git push
 ```
 
 ### After cloning this repo
@@ -72,6 +81,21 @@ rosdep install --from-paths src --ignore-src -y --rosdistro melodic --skip-keys=
 # build
 catkin_make
 ```
+4. clone the RSBB ROS communication repo into your src folder:
+```
+git clone https://github.com/rockin-robot-challenge/at_home_rsbb_comm_ros.git
+cd at_home_rsbb_comm_ros
+# make sure you do the following or catkin_make will fail
+# a repo with a very similar name is a submodule of this repo
+# make sure to rerun this if you ever update this repo
+git submodule update --init
+
+cd ../..
+catkin_make
+```
+
+5. In order for the robot to path through doors you must reduce the `inflation_radius` and `inflation_dist` parameter in the tiago planner configuration. This reduces the distance from an obstacle (e.g. furniture, door, wall) the robot is willing to cross. TODO create a script to do this or find a better way... You can find `inflation_radius` in `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/common/global_costmap_public_sim.yaml` and `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/common/local_costmap_public_sim.yaml`. You can find `inflation_dist` in `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/teb/local_planner.yaml`. I set the value to `0.15`.
+
 ## Running
 
 1. Make sure the workspace is on the ros package path, check path with ``echo $ROS_PACKAGE_PATH``. You should make sure to comment out any previous ROS Workspaces that may be sourced in your ``~.bashrc``.
@@ -87,7 +111,16 @@ source {path to workspace}/devel/setup.bash
 roslaunch hello_tiago base_ralt_tiago.launch
 ```
 
-3. To run the simulation run (TODO):
+3. To run the restricted task 3 scenario:
+
+```
+# launch the simulation and start the gaan software controller
+roslaunch hello_tiago restricted_task_3.launch
+
+# (in a separate terminal) launch the rsbb which will send the start signal (granny annie pushes the summon button)
+# note: wait for the robot to initialise and tuck arm before running this command
+roslaunch fake_rsbb restricted_task_3.launch
+```
 
 ### If the Robot Model does not load...
 If there are issues with ``ModuleNotFoundError: No module named 'rospkg'``

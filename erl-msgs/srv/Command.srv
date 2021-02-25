@@ -1,0 +1,5 @@
+string action
+argument[] arguments
+time time
+---
+string result

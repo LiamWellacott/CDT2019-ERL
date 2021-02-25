@@ -1,0 +1,54 @@
+<launch>
+
+  <arg name="robot"  default="titanium"/>
+  <arg name="arm"  default="$(eval {'iron': False}.get(arg('robot'), True))"/>
+  <arg name="end_effector"  default="$(eval {'iron': 'false', 'steel': 'pal-gripper', 'titanium': 'pal-hey5'}.get(arg('robot'), 'pal-gripper'))"/>
+  <arg name="ft_sensor"  default="$(eval {'titanium': 'schunk-ft'}.get(arg('robot'), 'false'))"/>
+  <arg name="laser_model"  default="sick-571"/>
+  <arg name="camera_model"  default="orbbec-astra"/>
+  <arg name="public_sim" default="true"/>
+  <arg name="use_moveit_camera" default="false"/>
+  <arg name="use_dynamic_footprint" default="false"/>
+
+  <arg name="map" default="$(find navigation)/maps/rawmap"/>
+
+  <!-- bring up robot -->
+  <include file="$(find tiago_gazebo)/launch/simulation_tiago_bringup.launch">
+    <arg name="arm" value="$(arg arm)"/>
+    <arg name="end_effector" value="$(arg end_effector)"/>
+    <arg name="ft_sensor" value="$(arg ft_sensor)"/>
+    <arg name="laser_model" value="$(arg laser_model)"/>
+    <arg name="camera_model" value="$(arg camera_model)"/>
+    <arg name="public_sim"  value="$(arg public_sim)"/>
+    <arg name="use_moveit_camera" value="$(arg use_moveit_camera)"/>
+    <arg name="use_dynamic_footprint" value="$(arg use_dynamic_footprint)"/>
+  </include>
+
+  <!-- make sure the arm is nice and cosy-->
+  <node name="tuck_arm" pkg="tiago_gazebo" type="tuck_arm.py" output="screen"/>
+
+  <!-- bring up navigation stack -->
+  <include file="$(find tiago_2dnav_gazebo)/launch/navigation.launch">
+    <!-- <arg name="state"          value="mapping"/> --> <!-- if you need to create a new map, change the state here-->
+    <arg name="state"          value="localization"/>
+    <arg name="mapping"        value="gmapping"/>
+    <arg name="local_planner"  value="teb"/>
+    <arg name="public_sim"     value="true"/>
+    <arg name="rgbd_sensors"   value="false"/> <!-- requires software for rgbd sensors apparently-->
+    <arg name="map"            value="$(arg map)"/>
+  </include>
+
+  <node name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find tiago_2dnav)/config/rviz/navigation_public_sim.rviz"/>
+
+  <!--   pointcloud to laserscan-->
+  <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
+    <arg name="cloud" value="/xtion/depth_registered/points"/>
+  </include>
+
+  <!-- launch GAAN nodes -->
+  <node name="gaan_navigation" pkg="navigation" type="nav.py" output="screen"/>
+
+  <node name="gaan_controller" pkg="gaan_controller" type="controller.py" output="screen"/>
+
+</launch>
