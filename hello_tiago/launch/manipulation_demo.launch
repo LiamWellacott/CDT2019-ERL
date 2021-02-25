@@ -10,12 +10,12 @@
   </include>
 
   <!-- push table_description to factory and spawn robot in gazebo -->
-  <node name="spawn_box" pkg="gazebo_ros" type="spawn_model" args="-file $(find fake_rsbb)/objects/box.urdf -urdf -x -2.7 -y 1.0 -z 1.83 -Y 1.5708 -model cheezit_box" />
-  <!-- <node name="spawn_coke_can" pkg="gazebo_ros" type="spawn_model" args="-sdf -file $(env HOME)/.gazebo/models/coke_can/model.sdf -x -2.7 -y 1.0 -z 1.76 -R 0.0 -P 0.0 -Y 0.0 -model coke_can_model" respawn="false" output="screen" /> -->
+  <!-- <node name="spawn_box" pkg="gazebo_ros" type="spawn_model" args="-file $(find fake_rsbb)/objects/box.urdf -urdf -x -2.7 -y 1.0 -z 1.83 -Y 1.5708 -model cheezit_box" /> -->
+  <node name="spawn_coke_can" pkg="gazebo_ros" type="spawn_model" args="-sdf -file $(env HOME)/.gazebo/models/coke_can/model.sdf -x -2.7 -y 1.0 -z 1.76 -R 0.0 -P 0.0 -Y 0.0 -model coke_can_model" respawn="false" output="screen" />
 
   <!-- marker detector -->
   <node pkg="aruco_ros" type="single"  name="aruco_single">
-      <remap from="/camera_info"       to="/xtion/rgb/camera_info" />
+      <remap from="/camera_info"       to="/xtion/rgb/camera_info" />3
       <remap from="/image"             to="/xtion/rgb/image_rect_color" />
       <param name="image_is_rectified" value="True"/>
       <param name="marker_size"        value="0.045"/>
@@ -31,12 +31,25 @@
   <!-- Load definition of pregrasp motion into play_motion namespace -->
   <rosparam command="load" file="$(find tiago_pick_demo)/config/pick_motions.yaml" /> 
 
-  <!-- Pick & place server -->
-  <node name="pick_and_place_server" pkg="tiago_pick_demo" type="pick_and_place_server.py" output="screen">
+  <!-- Pick & place server cheezitz-->  <node name="pick_and_place_server" pkg="tiago_pick_demo" type="pick_and_place_server.py" output="screen">
       <rosparam command="load" file="$(find tiago_pick_demo)/config/pick_and_place_params.yaml" />
       <param name="object_width"  value="0.158" />
       <param name="object_height" value="0.210" />
       <param name="object_depth"  value="0.06" />
+  </node>
+  <!-- <node name="pick_and_place_server" pkg="tiago_pick_demo" type="pick_and_place_server.py" output="screen">
+      <rosparam command="load" file="$(find tiago_pick_demo)/config/pick_and_place_params.yaml" />
+      <param name="object_width"  value="0.158" />
+      <param name="object_height" value="0.210" />
+      <param name="object_depth"  value="0.06" />
+  </node> -->
+
+  <!-- Pick & place server coke can-->
+  <node name="pick_and_place_server" pkg="tiago_pick_demo" type="pick_and_place_server.py" output="screen">
+      <rosparam command="load" file="$(find tiago_pick_demo)/config/pick_and_place_params.yaml" />
+      <param name="object_width"  value="0.08" />
+      <param name="object_height" value="0.12" />
+      <param name="object_depth"  value="0.08" />
   </node>
 
   <!-- Node exposing service to start looking for the object and trigger the picking -->
@@ -48,6 +61,6 @@
 
   <node name="grasp_service" pkg="manipulation" type="grasp.py" output="screen"/>
   <node name="octomap_rethrottle" pkg="topic_tools" type="throttle" args="messages /xtion/depth_registered/points 2  /throttle_filtering_points/filtered_points" />
-  <node name="look_around" pkg="play_motion" type="run_motion" args="head_tour" />
+  <node name="look_around" pkg="play_motion" type="run_motion" args="head_tour" launch-prefix="bash -c 'sleep 15.0; $0 $@' "/>
 
 </launch>
