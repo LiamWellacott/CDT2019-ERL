@@ -94,6 +94,7 @@ cd ../..
 catkin_make
 ```
 
+5. In order for the robot to path through doors you must reduce the `inflation_radius` and `inflation_dist` parameter in the tiago planner configuration. This reduces the distance from an obstacle (e.g. furniture, door, wall) the robot is willing to cross. TODO create a script to do this or find a better way... You can find `inflation_radius` in `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/common/global_costmap_public_sim.yaml` and `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/common/local_costmap_public_sim.yaml`. You can find `inflation_dist` in `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/teb/local_planner.yaml`. I set the value to `0.15`.
 
 ## Running
 
@@ -110,7 +111,16 @@ source {path to workspace}/devel/setup.bash
 roslaunch hello_tiago base_ralt_tiago.launch
 ```
 
-3. To run the simulation run (TODO):
+3. To run the restricted task 3 scenario:
+
+```
+# launch the simulation and start the gaan software controller
+roslaunch hello_tiago restricted_task_3.launch
+
+# (in a separate terminal) launch the rsbb which will send the start signal (granny annie pushes the summon button)
+# note: wait for the robot to initialise and tuck arm before running this command
+roslaunch fake_rsbb restricted_task_3.launch
+```
 
 ### If the Robot Model does not load...
 If there are issues with ``ModuleNotFoundError: No module named 'rospkg'``

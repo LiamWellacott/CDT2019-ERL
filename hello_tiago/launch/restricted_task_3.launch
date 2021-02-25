@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+
+  <include file="$(find hello_tiago)/launch/base_ralt_tiago_world_only.launch">
+    <arg name="gzpose" value="-x -5.3 -y -1.2 -z 0.8 -R 0.0 -P 0.0 -Y -1.5708"/>
+    <arg name="robot"  value="steel"/>
+  </include>
+
+  <node name="spawn_box" pkg="gazebo_ros" type="spawn_model" args="-file $(find fake_rsbb)/objects/box.urdf -urdf -x -2.7 -y 1.0 -z 1.8 -model cheezit_box" />
+
+  <node name="spawn_annie" pkg="gazebo_ros" type="spawn_model" args="-sdf -file $(find fake_rsbb)/objects/person_standing/model.sdf -x -1.6 -y -3.0 -z 0.8 -Y -1.5708 -model granny_annie"/>
+  
+  <include file="$(find gaan_controller)/launch/start.launch">
+    <arg name="robot"  value="steel"/>
+    <arg name="map" value="$(find navigation)/maps/restricted_task_3"/>
+  </include>
+
+</launch>
