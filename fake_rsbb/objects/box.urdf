@@ -1,0 +1,25 @@
+<robot name="cheezit_box">
+  <link name="box">
+    <inertial>
+      <origin xyz="0 0 0" />
+      <mass value="0.411" />
+      <!-- I have no idea what to set these too -->
+      <inertia  ixx="0.411" ixy="0.0"  ixz="0.0"  iyy="41.1"  iyz="0.0"  izz="0.1" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.06 0.158 0.21" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.06 0.158 0.21" />
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="cheezit_box">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+</robot>

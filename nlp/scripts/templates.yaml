@@ -1,5 +1,5 @@
 
-welcome: Welcome to memory game. I'm going to say three numbers for you to repeat backwards. Ready?
+welcome: Hi bitch!
 
 round: Can you repeat the numbers {{ numbers|join(", ") }} backwards?
 

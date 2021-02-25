@@ -1,0 +1,12 @@
+<launch>
+    <arg name="x" default="1.8"/> <!-- set to starting location for the scenario in map frame-->
+    <arg name="y" default="2.8"/>
+    <arg name="theta" default="1.5708"/>
+
+    <include file="$(find roah_rsbb_comm_ros)/launch/test.launch"/>
+
+    <node name="call_rostopic" pkg="rostopic" type="rostopic" args='pub /roah_rsbb/tablet/call std_msgs/Empty "{}" ' />
+
+    <node name="position_rostopic" pkg="rostopic" type="rostopic" args='pub /roah_rsbb/tablet/position geometry_msgs/Pose2D "{x: $(arg x), y: $(arg y), theta: $(arg theta)}" ' />
+
+</launch>
