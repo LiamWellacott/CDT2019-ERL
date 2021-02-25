@@ -10,6 +10,7 @@ import cv2
 import os
 from cv_bridge import CvBridge
 import matplotlib.pyplot as plt
+from erl_msgs.srv import Faces, FacesResponse
 
 class face_rec_node(object):
     """docstring for ."""
@@ -28,14 +29,20 @@ class face_rec_node(object):
         self.known_name = []
         self.process_this_frame = True
         self.process_frame = 2
+        self.frame=None
 
         dir = rospack.get_path("face-rec")
         self.init_known(os.path.join(dir, "faces", "known"))
 
-        self.track_pub = rospy.Publisher('/tiago/vision/track', String, queue_size=10)
-        self.cam_rec_sub = rospy.Subscriber("/xtion/rgb/image_raw", Image, self.recognise_person)
-        self.face_rec_pub = rospy.Publisher("/erl/face_rec/faces", Image, queue_size=10)
-        self.cam_track_sub = rospy.Subscriber("/xtion/rgb/image_raw", Image, self.track_person)
+
+
+        self.cam_sub = rospy.Subscriber("/xtion/rgb/image_raw", Image, self.save_last)
+        self.face_rec_srv = rospy.Service("/erl/face_rec", Faces, self.recognise_person)
+
+        #self.track_pub = rospy.Publisher('/tiago/vision/track', String, queue_size=10)
+        #self.cam_track_sub = rospy.Subscriber("/xtion/rgb/image_raw", Image, self.track_person)
+
+
         self.bridge = CvBridge()
 
         rospy.loginfo("Visual component node started")
@@ -62,40 +69,51 @@ class face_rec_node(object):
     def find_object_srv(self, msg):
         pass
 
-    def recognise_person(self, msg):
-        if self.process_this_frame:
-            cv_img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='rgb8')
-            frame = np.asarray(cv_img)
-            scale=2
-            small_frame = cv2.resize(frame, (0, 0), fx=1./float(scale), fy=1./float(scale))
-            # convert back to RGB, cv uses BGR conventiion.
+    def save_last(self, msg):
+        cv_img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='rgb8')
+        self.frame = np.asarray(cv_img)
 
-            face_loc = fr.face_locations(small_frame, model='cnn')
-            rospy.loginfo("Face-rec: {} face detected ".format(len(face_loc)))
-            face_encodings = fr.face_encodings(small_frame, face_loc)
+    def recognise_person(self, req):
+        if self.frame is None:
+            rospy.logerr("Seems like the camera is not running, please make sure the camera images are published on the right topic")
+            return [""]
+        # to avoid writing the frame while processing it.
+        self.cam_sub.unregister()
 
-            face_names = []
-            for enc in  face_encodings:
-                matches = fr.compare_faces(self.known_enco, enc)
-                name = "Unkown"
+        frame = self.frame
+        #reduce this to speed things up but will reduce the accuracy
+        scale=1
+        small_frame = cv2.resize(frame, (0, 0), fx=1./float(scale), fy=1./float(scale))
+        # convert back to RGB, cv uses BGR conventiion.
 
-                face_distances = fr.face_distance(np.array(self.known_enco), np.array(enc))
-                best_match_index = np.argmin(face_distances)
-                print(best_match_index)
+        face_loc = fr.face_locations(small_frame, model='cnn')
+        rospy.loginfo("Face-rec: {} face detected ".format(len(face_loc)))
+        face_encodings = fr.face_encodings(small_frame, face_loc)
 
-                if matches[best_match_index]:
-                    name = self.known_name[best_match_index]
+        face_names = []
+        for enc in  face_encodings:
+            matches = fr.compare_faces(self.known_enco, enc)
+            name = "Unkown"
+            face_distances = fr.face_distance(np.array(self.known_enco), np.array(enc))
+            best_match_index = np.argmin(face_distances)
 
-                face_names.append(name)
 
-            render = self.overlay(frame, face_loc, face_names, scale)
+            if matches[best_match_index]:
+                name = self.known_name[best_match_index]
 
-            self.render = self.bridge.cv2_to_imgmsg(render, encoding="rgb8")
+            face_names.append(name)
 
-        self.process_this_frame = not self.process_this_frame
+        self.cam_sub = rospy.Subscriber("/xtion/rgb/image_raw", Image, self.save_last)
+        return FacesResponse(face_names)
+
+        # Use this bit of code to overlay the detection to the image
+        #render = self.overlay(frame, face_loc, face_names, scale)
+        #self.render = self.bridge.cv2_to_imgmsg(render, encoding="rgb8")
+
+
         #self.process_this_frame %= self.process_frame
 
-        self.face_rec_pub.publish(self.render)
+        #self.face_rec_pub.publish(self.render)
 
     def overlay(self, frame, loc, names, scale):
         # Display the results
