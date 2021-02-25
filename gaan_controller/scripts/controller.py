@@ -32,11 +32,13 @@ class Controller(object):
 
         # subscribe to GANN topics
 
-        # initialise semantic map TODO read from a sem map file stored in navigation
+        # initialise semantic map
         self.sem_map = {}
 
-        self.registerLocation('kitchen_island', -2.4, 1.8, 1.5708)
-        self.registerLocation('coffee_table', 1.7, 2.6, 0.0)
+        furniture = rospy.get_param('/semmap/furniture')
+        for item in furniture:
+            interaction_pose = furniture[item]['interaction_pose']
+            self.registerLocation(item, interaction_pose['x'], interaction_pose['y'], interaction_pose['theta'])
 
     def registerLocation(self, location_tag, x, y, theta):
         self.sem_map[location_tag] = Pose()
