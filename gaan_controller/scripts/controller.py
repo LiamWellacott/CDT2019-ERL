@@ -8,6 +8,8 @@ from navigation.srv import NavigateTo
 from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import Pose2D, Pose
 
+from erl_msgs.srv import Command, CommandResponse, Speech
+
 from tf.transformations import quaternion_from_euler
 
 class State(Enum):
@@ -21,12 +23,13 @@ once = True # TODO required until NLP services can are available
 class Controller(object):
 
     def __init__(self):
+        rospy.loginfo("Initalizing controller")
         self.reset()
 
         # subscribe to RSBB topics
         rospy.Subscriber('roah_rsbb/tablet/call', Empty, self._setSummoned)
         rospy.Subscriber('roah_rsbb/tablet/position', Pose2D, self._setSummonLocation)
-
+        nlp_service = rospy.Service('voc_cmd', Command, self._vocal_commandCB)
         # prepare to call GAAN services
         self.navigate_to = rospy.ServiceProxy('navigate_to', NavigateTo)
 
@@ -39,6 +42,8 @@ class Controller(object):
         for item in furniture:
             interaction_pose = furniture[item]['interaction_pose']
             self.registerLocation(item, interaction_pose['x'], interaction_pose['y'], interaction_pose['theta'])
+        
+        rospy.loginfo("Ready to control!")
 
     def registerLocation(self, location_tag, x, y, theta):
         self.sem_map[location_tag] = Pose()
@@ -95,7 +100,12 @@ class Controller(object):
         self.state = State.SUMMONED
 
     def _waitCB(self, msg):
-        self.job_done = True 
+        self.job_done = True
+
+    def _vocal_commandCB(self, req):
+        cmd = req
+        rospy.loginfo(cmd)
+        return CommandResponse("Done")
 
     ### Main functions
     def summoned(self):
@@ -107,12 +117,22 @@ class Controller(object):
         # Request next instruction
         self.state = State.RECEIVE_INSTRUCTION
 
-    def receiveInstruction(self):
-        global once
+    def sendSpeech(self, msg):
+        rospy.wait_for_service('speech')
+        try:
+            speech_service = rospy.ServiceProxy('speech', Speech)
+            ret = speech_service(msg)
+            return ret
+        except rospy.ServiceException as e:
+             rospy.loginfo("Service call failed: %s"%e)
+             return "could not speak."
 
+    def receiveInstruction(self, req):
+        global once
+        # inti the vocal_command
         rospy.loginfo('COMMAND ME ANNIE')
 
-        # TODO call nlp service to ask annie for instruction 
+        # TODO call nlp service to ask annie for instruction
         # for now set the internal state of controller to next phase of scenario one time
         # subsequent calls (such as after the task is complete) will be "requests" for the robot to go idle
         if once:
@@ -126,23 +146,23 @@ class Controller(object):
         else:
             response_task = 'no_task'
             rospy.loginfo("OK, GOING IDLE")
-        
+
         # use response from nlp to determine next action
         if response_task == 'fetch': # TODO format of the response from NLP TBD
 
-            # pose of robot in relation to furniture looked up from the 'semantic map' 
+            # pose of robot in relation to furniture looked up from the 'semantic map'
             self.fetch_object_location = self.sem_map[response_object_location]
             self.fetch_return_location = self.sem_map[response_return_location]
-            
+
             self.state = State.FETCHING
-    
+
         elif response_task == 'no_task':
 
             # annie is satisfied, we can rest and wait for further commands
             self.reset()
-    
+
     def fetching(self):
-        
+
         # Go to object location
         self.navigateAndWait(self.fetch_object_location)
 
@@ -157,7 +177,7 @@ class Controller(object):
 
         # Go to the fetch destination
         self.navigateAndWait(self.fetch_return_location)
-        
+
         # identify a location to place the object TODO
         rospy.loginfo('FINDING SOMEWHERE TO PUT THE OBJECT ON THE FURNITURE')
 
@@ -186,6 +206,6 @@ if __name__ == '__main__':
     con = Controller()
 
     rate = rospy.Rate(1)
-    while(True):
+    while not rospy.is_shutdown():
         con.step()
         rate.sleep()

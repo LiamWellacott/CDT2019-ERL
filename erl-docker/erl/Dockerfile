@@ -18,5 +18,9 @@ RUN cd tools && \
     pip install -r requirements-dev.txt && \
     python setup.py install
 
+RUN cd tools && \
+    wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
+    unzip ngrok-stable-linux-amd64.zip && rm ngrok-stable-linux-amd64.zip
+
 EXPOSE 11345
 CMD ["terminator"]
