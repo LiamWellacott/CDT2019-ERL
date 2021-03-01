@@ -67,5 +67,5 @@ wget http://pjreddie.com/media/files/yolov3.weights
 
     Published topic with the detected bounding boxes on top of the image (only published if `publish_image` is set to true).
 
-Adapted from \url{https://github.com/vvasilo/yolov3_pytorch_ros.
+Adapted from https://github.com/vvasilo/yolov3_pytorch_ros.
 
