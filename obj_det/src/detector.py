@@ -135,6 +135,8 @@ class DetectorManager():
                 detection_msg.ymax = ymax_unpad
                 detection_msg.probability = conf
                 detection_msg.Class = self.classes[int(det_class)]
+                
+                #image_depth_sub = rospy.Subscriber(depth_image_topic, Image, sub_callbacks.depth_callback)
 
                 # Append in overall detection message
                 detection_results.bounding_boxes.append(detection_msg)
