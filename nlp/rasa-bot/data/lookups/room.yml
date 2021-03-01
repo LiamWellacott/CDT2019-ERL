@@ -1,0 +1,12 @@
+version: "2.0"
+nlu:
+  - lookup: room
+    examples: |
+      - bedroom
+      - kitchen
+      - living room
+      - dining room
+      - inside hallway
+      - outside hallway
+      - garden
+      - toilet

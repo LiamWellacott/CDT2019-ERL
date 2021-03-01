@@ -1,0 +1,104 @@
+version: '2.0'
+session_config:
+  session_expiration_time: 480
+  carry_over_slots_to_new_session: true
+
+intents:
+- affirm
+- deny
+- search_indirect:
+    is_retrieval_intent: true
+    use_entities:
+    - item
+    - person
+- search_direct:
+    is_retrieval_intent: true
+    use_entities:
+    - item
+    - person
+- bring:
+    is_retrieval_intent: true
+    use_entities:
+    - item
+    - person
+- greet
+- goodbye
+- mood_great
+- mood_unhappy
+- bot_challenge
+
+entities:
+- item
+- person
+- rooms
+
+slots:
+  rooms:
+    type: text
+    influence_conversation: true
+  person:
+    type: text
+    influence_conversation: true
+  item:
+    type: text
+    influence_conversation: true
+  search_status:
+    type: categorical
+    influence_conversation: true
+    values:
+    - pending
+    - success
+    - failure
+  bring_status:
+    type: categorical
+    influence_conversation: true
+    values:
+    - pending
+    - success
+    - failure
+
+
+responses:
+  utter_greet:
+  - text: Hey! How are you?
+  utter_cheer_up:
+  - text: 'Here is something to cheer you up:'
+    image: https://i.imgur.com/nGF1K8f.jpg
+  utter_did_that_help:
+  - text: Did that help you?
+  utter_happy:
+  - text: Great, carry on!
+  utter_goodbye:
+  - text: Bye
+  utter_iamabot:
+  - text: I am a bot, powered by Rasa.
+  utter_search_offer:
+  - text: Should I search for it?
+  utter_search_accept:
+  - text: Going to look now!
+  utter_search_success/item:
+  - text: Found it!
+  utter_search_success/person:
+  - text: Found them!
+  utter_search_failure/item:
+  - text: Couldn't find it
+  utter_search_failure/person:
+  - text: Couldn't find them
+  utter_bring_offer:
+  - text: Should I bring it to you?
+  utter_bring_finish:
+  - text: There you go
+  utter_ready:
+  - text: Good morning Granny Annie, how can I help you?
+  utter_bring_confirmation:
+  - text: You'd like me to bring you the {item}. Have I understood you correctly?
+  utter_bring_accept:
+  - text: I'm going to bring you the {item} now.
+  utter_handover/item:
+  - text: Here is the {item}.
+  utter_handover/person:
+  - text: Here is {person}.
+
+actions:
+- action_get_search_status
+- action_get_bring_status

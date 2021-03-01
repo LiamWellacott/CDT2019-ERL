@@ -1,0 +1,31 @@
+version: "2.0"
+nlu:
+  - synonym: mobile phone
+    examples: |
+      - mobile
+      - phone
+      - iphone
+      - samsung
+  - synonym: toilet
+    examples: |
+      - loo
+      - toilet
+      - bathroom
+      - restroom
+      - lavatory
+      - facilities
+      - wc
+      - gents room
+      - ladies room
+      - shower
+  - synonym: living room
+    examples: |
+      - sitting room
+      - lounge
+      - salon
+      - common room
+  - synonym: cracker box
+    examples: |
+      - crackers
+      - biscuits
+      
