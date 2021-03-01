@@ -1,0 +1,57 @@
+version: "2.0"
+nlu:
+- intent: search_direct/person
+  examples: |
+    - Can you search for the [plumber](person)?
+    - Can you search for [Dr. Kimble](person)?
+    - Can you help me search for the [plumber](person)?
+    - Can you help me search for [Dr. Kimble](person)?
+    - Search for the [plumber](person)?
+    - Search for [Dr. Kimble](person)?
+    - Can you find the [plumber](person)?
+    - Can you find [Dr. Kimble](person)?
+    - Can you help me find the [plumber](person)?
+    - Can you help me find [Dr. Kimble](person)?
+    - Find the [plumber](person) for me
+    - Find [Dr. Kimble](person) for me
+    - Can you locate the [plumber](person)?
+    - Can you locate [Dr. Kimble](person)?
+    - Can you help me locate the [plumber](person)?
+    - Can you help me locate [Dr. Kimble](person)?
+    - Locate the [plumber](person)?
+    - Locate [Dr. Kimble](person)?
+    - Can you look for the [plumber](person)?
+    - Can you look for [Dr. Kimble](person)?
+    - Can you help me look for the [plumber](person)?
+    - Can you help me look for [Dr. Kimble](person)?
+    - Look for the [plumber](person)?
+    - Look for [Dr. Kimble](person)?
+    - Can you pinpoint the [plumber](person)?
+    - Can you pinpoint [Dr. Kimble](person)?
+    - Can you help me pinpoint the [plumber](person)?
+    - Can you help me pinpoint [Dr. Kimble](person)?
+    - Pinpoint the [plumber](person)?
+    - Pinpoint [Dr. Kimble](person)?
+    - Can you spot the [plumber](person)?
+    - Can you spot [Dr. Kimble](person)?
+    - Can you help me spot the [plumber](person)?
+    - Can you help me spot [Dr. Kimble](person)?
+    - Spot the [plumber](person)?
+    - Spot [Dr. Kimble](person)?
+    - Can you find the [plumber](person)?
+    - Can you find the [postman](person)?
+    - Can you find the [Deli](person) man?
+
+- intent: search_indirect/person
+  examples: |
+    - Do you know where the [plumber](person) is?
+    - Do you know where [Dr. Kimble](person) is?
+    - Have you seen the [plumber](person)?
+    - Have you seen [Dr. Kimble](person)?
+    - Do you remember where the [plumber](person) is?
+    - Do you remember where [Dr. Kimble](person) is?
+    - Do you know the location of the [plumber](person)?
+    - Do you know the location of [Dr. Kimble](person)?
+    - Do you know where I can find the [plumber](person)?
+    - Do you know where I can find [Dr. Kimble](person)?
+    - Where is the [postman](person)?
