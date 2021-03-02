@@ -111,7 +111,16 @@ source {path to workspace}/devel/setup.bash
 roslaunch hello_tiago base_ralt_tiago.launch
 ```
 
-3. To run the simulation run (TODO):
+3. To run the restricted task 3 scenario:
+
+```
+# launch the simulation and start the gaan software controller
+roslaunch hello_tiago restricted_task_3.launch
+
+# (in a separate terminal) launch the rsbb which will send the start signal (granny annie pushes the summon button)
+# note: wait for the robot to initialise and tuck arm before running this command
+roslaunch fake_rsbb restricted_task_3.launch
+```
 
 ### If the Robot Model does not load...
 If there are issues with ``ModuleNotFoundError: No module named 'rospkg'``
