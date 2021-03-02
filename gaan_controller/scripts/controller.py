@@ -25,7 +25,7 @@ class Controller(object):
     def __init__(self):
         rospy.loginfo("Initalizing controller")
         self.reset()
-        self.isInit=False
+
         # subscribe to RSBB topics
         rospy.Subscriber('roah_rsbb/tablet/call', Empty, self._setSummoned)
         rospy.Subscriber('roah_rsbb/tablet/position', Pose2D, self._setSummonLocation)
@@ -36,13 +36,15 @@ class Controller(object):
 
         # subscribe to GANN topics
 
-        # initialise semantic map TODO read from a sem map file stored in navigation
+        # initialise semantic map
         self.sem_map = {}
 
-        self.registerLocation('kitchen_island', -2.4, 1.8, 1.5708)
-        self.registerLocation('coffee_table', 1.7, 2.6, 0.0)
-        self.isInit=True
-        rospy.loginfo("Done")
+        furniture = rospy.get_param('/semmap/furniture')
+        for item in furniture:
+            interaction_pose = furniture[item]['interaction_pose']
+            self.registerLocation(item, interaction_pose['x'], interaction_pose['y'], interaction_pose['theta'])
+
+        rospy.loginfo("Ready to control!")
 
     def registerLocation(self, location_tag, x, y, theta):
         self.sem_map[location_tag] = Pose()
@@ -105,7 +107,6 @@ class Controller(object):
         cmd = req
         rospy.loginfo(cmd)
         return CommandResponse("Done")
-
 
     ### Main functions
     def summoned(self):
