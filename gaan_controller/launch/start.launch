@@ -47,6 +47,9 @@
   </include>
 
   <!-- launch GAAN nodes -->
+  <!-- load sem map -->
+  <rosparam command="load" file="$(find navigation)/semmap/map.yaml"/>
+
   <node name="gaan_navigation" pkg="navigation" type="nav.py" output="screen"/>
 
   <node name="gaan_controller" pkg="gaan_controller" type="controller.py" output="screen"/>
