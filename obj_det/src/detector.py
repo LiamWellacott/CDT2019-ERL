@@ -135,6 +135,8 @@ class DetectorManager():
                 detection_msg.ymax = ymax_unpad
                 detection_msg.probability = conf
                 detection_msg.Class = self.classes[int(det_class)]
+                
+                #image_depth_sub = rospy.Subscriber(depth_image_topic, Image, sub_callbacks.depth_callback)
 
                 # Append in overall detection message
                 detection_results.bounding_boxes.append(detection_msg)
@@ -210,7 +212,32 @@ class DetectorManager():
         # Publish visualization image
         image_msg = self.bridge.cv2_to_imgmsg(imgOut, "rgb8")
         self.pub_viz_.publish(image_msg)
+    """   
+    def get3D(self):
+        image_depth_sub = rospy.Subscriber(depth_image_topic, Image, sub_callbacks.depth_callback)
+        if len(depth_img_get)!=0 and (obj['xmax']-obj['xmin'])*(obj['ymax']-obj['ymin'])>=0:
+        ### Calculate position here by depth image and camera parameters
+            depth_box_width=obj['xmax']-obj['xmin']
+            depth_box_height=obj['ymax']-obj['ymin']
+            delta_rate=0.3
+            x_box_min=int(obj['xmin'] + depth_box_width*delta_rate)
+            y_box_min=int(obj['ymin'] + depth_box_height*delta_rate)
+            x_box_max=int(obj['xmax'] - depth_box_width*delta_rate)
+            y_box_max=int(obj['ymax'] - depth_box_height*delta_rate)
+            after_width=(depth_box_width*(1-2*delta_rate))
+            after_height=(depth_box_height*(1-2*delta_rate))
+            '''  '''
+            rect = depth_img_get[y_box_min:y_box_max,x_box_min:x_box_max] * 0.001
+            rect[np.where(rect == 0)] = 99
+            print(rect.min())
 
+            x_pos = (0.5 * (obj['xmax'] + obj['xmin']) - cx) * z_pos / fx
+            y_pos = (0.5 * (obj['ymax'] + obj['ymin']) - cy) * z_pos / fy
+
+            info.x=x_pos
+            info.y=y_pos
+            info.z=z_pos
+"""
 
 if __name__=="__main__":
     # Initialize node
