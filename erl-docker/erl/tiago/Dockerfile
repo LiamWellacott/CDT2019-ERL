@@ -37,4 +37,13 @@ RUN source /opt/ros/melodic/setup.bash && \
     source /opt/ros/melodic/setup.bash && \
     catkin_make -j 4
 
+
+RUN source /opt/ros/melodic/setup.bash && \
+    cd $ERL_WS/src && \
+    git clone https://github.com/rockin-robot-challenge/at_home_rsbb_comm_ros.git && \
+    cd at_home_rsbb_comm_ros && \
+    git submodule update --init && \
+    cd ../.. && \
+    catkin_make
+
 RUN cmake --version
