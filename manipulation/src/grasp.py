@@ -30,6 +30,7 @@ class State(Enum):
     IDLE = 0
     PICKING = 1
     PLACING = 2
+    PRESENT = 3
 
 class ManipulationServer(object):
     def __init__(self):
@@ -54,8 +55,11 @@ class ManipulationServer(object):
         self.goal.priority = 0  # Optional
 
 
-        self.pick_as = SimpleActionClient('/pickup_pose', PickUpPoseAction) 
+        self.pick_as = SimpleActionClient('/pickup_pose', PickUpPoseAction)
 
+
+
+        
         self.req_goal = PickUpPoseGoal()
         self.req_goal.object_pose.header.frame_id = "base_footprint"
 
@@ -93,6 +97,9 @@ class ManipulationServer(object):
     def tuck_arm(self):
         self.play_motion("home")
 
+    def arm_out(self):
+        self.play_motion("arm_out")
+
 
     def _reset(self):
         self.state = State.IDLE
@@ -125,10 +132,39 @@ class ManipulationServer(object):
         #Set state to idle
         self._reset()    
 
-        
+    def setPlace(self, msg):
+        self._reset()
+        self.state = State.PLACING
+        self.req_goal.object_pose.pose = msg.goal_pose
+        return GraspObjectResponse(True)
 
     def place(self):
+        #Service calls this function after receiving the pose to place the object
+        #unfold the arm
+        self.unfold_arm()
+
+        #Send goal to pick_and_place_server
+        self.pick_as.send_goal_and_wait(self.req_goal)
+
+        #Read the return code of server
+        result = self.pick_as.get_result()
+        if str(moveit_error_dict[result.error_code]) == "SUCCESS":
+            rospy.loginfo("Pick Action finished succesfully")
+        else:
+            rospy.logerr("Failed to pick, not trying further")
+
+        #Fold the arm back to a neutral position
+        self.tuck_arm()
+
+        #Set state to idle
+        self._reset()   
+
         return
+
+    def setPresent(self):
+        self._reset()
+        self.state= State.PRESENT
+        return GraspObjectResponse(True)
 
 
     def step(self):
