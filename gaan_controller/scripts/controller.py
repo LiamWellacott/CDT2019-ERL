@@ -8,7 +8,7 @@ from navigation.srv import NavigateTo
 from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import Pose2D, Pose
 
-from erl_msgs.srv import Command, CommandResponse, Speech
+from erl_msgs.srv import Command, CommandResponse, Speech, Faces
 
 from tf.transformations import quaternion_from_euler
 
@@ -32,6 +32,7 @@ class Controller(object):
         nlp_service = rospy.Service('voc_cmd', Command, self._vocal_commandCB)
         # prepare to call GAAN services
         self.navigate_to = rospy.ServiceProxy('navigate_to', NavigateTo)
+        self.face_rec = rospy.ServiceProxy('/erl/face_rec', Faces)
 
         # subscribe to GANN topics
 
@@ -42,7 +43,7 @@ class Controller(object):
         for item in furniture:
             interaction_pose = furniture[item]['interaction_pose']
             self.registerLocation(item, interaction_pose['x'], interaction_pose['y'], interaction_pose['theta'])
-        
+
         rospy.loginfo("Ready to control!")
 
     def registerLocation(self, location_tag, x, y, theta):
@@ -127,7 +128,7 @@ class Controller(object):
              rospy.loginfo("Service call failed: %s"%e)
              return "could not speak."
 
-    def receiveInstruction(self, req):
+    def receiveInstruction(self):
         global once
         # inti the vocal_command
         rospy.loginfo('COMMAND ME ANNIE')
@@ -160,6 +161,18 @@ class Controller(object):
 
             # annie is satisfied, we can rest and wait for further commands
             self.reset()
+
+
+    def get_faces(self):
+        rospy.wait_for_service('/erl/face_rec')
+        try:
+            resp = self.face_rec()
+
+            return resp.names
+
+        except rospy.ServiceException as e:
+            rospy.loginfo("Service call failed: %s"%e)
+            return [""]
 
     def fetching(self):
 
