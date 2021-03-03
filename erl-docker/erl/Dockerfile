@@ -22,20 +22,5 @@ RUN cd tools && \
     wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
     unzip ngrok-stable-linux-amd64.zip && rm ngrok-stable-linux-amd64.zip
 
-#Adding dope    
-RUN cd $ERL_WS/src && \
-    git clone -b ros-kinetic https://github.com/NVlabs/Deep_Object_Pose.git dope && \
-    cd dope && \
-    pip install -r requirements.txt && \
-    rosdep install --from-paths src -i --rosdistro kinetic && \
-    cd ../.. && \
-    catkin_make && \
-    mkdir weights && \
-    cd weights && \
-    wget "https://drive.google.com/file/d/1rnjp2kgttraZRmqH51vW_NOaTTa6iiN2/view?usp=sharing" && \
-    unrar e weights.rar
-    
-    
-
 EXPOSE 11345
 CMD ["terminator"]
