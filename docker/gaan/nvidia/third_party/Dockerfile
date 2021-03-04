@@ -1,4 +1,4 @@
-FROM erl/nvidia:cudagl-cudnn
+FROM gaan/nvidia:cudagl-cudnn
 
 RUN apt update && \
     apt install -y libflann-dev libopenblas-base libopenblas-dev

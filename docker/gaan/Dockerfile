@@ -1,4 +1,4 @@
-FROM erl/tiago-melodic:gpu
+FROM gaan/tiago-melodic:gpu
 
 
 RUN pip install face_recognition
@@ -21,6 +21,11 @@ RUN cd tools && \
 RUN cd tools && \
     wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
     unzip ngrok-stable-linux-amd64.zip && rm ngrok-stable-linux-amd64.zip
+
+# TODO will this make it so you don't have to run it after creating the image?''
+RUN cd $GAAN_WS && \
+    source devel/setup.bash && \
+    catkin_make
 
 EXPOSE 11345
 CMD ["terminator"]

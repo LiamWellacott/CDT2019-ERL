@@ -20,9 +20,9 @@ docker run -it \
     --env="XAUTHORITY=$XAUTH" \
     --volume="$XAUTH:$XAUTH" \
     --runtime=nvidia \
-    --volume="`pwd`../..:/erl-ws/src/erl:rw" \
+    --volume="`pwd`../..:/gaan-ws/src/gaan:rw" \
     --device /dev/video0 \
     -p 5000:5000 \
-    --name erl \
-    erl/base:gpu \
+    --name gaan \
+    gaan/base:gpu \
     bin/bash
