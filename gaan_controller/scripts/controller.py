@@ -8,7 +8,7 @@ from navigation.srv import NavigateTo
 from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import Pose2D, Pose
 
-from erl_msgs.srv import Command, CommandResponse, Speech, Faces
+from gaan_msgs.srv import Command, CommandResponse, Speech, Faces
 
 from tf.transformations import quaternion_from_euler
 

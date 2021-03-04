@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(erl_msgs)
+project(gaan_msgs)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  geometry_msgs
   message_generation
 )
 
@@ -60,6 +61,7 @@ add_service_files(
   Command.srv
   Speech.srv
   Faces.srv
+  NavigateTo.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -73,6 +75,7 @@ add_service_files(
 generate_messages(
    DEPENDENCIES
    std_msgs  # Or other packages containing msgs
+   geometry_msgs
 )
 
 ################################################

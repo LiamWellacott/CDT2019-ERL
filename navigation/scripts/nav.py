@@ -5,7 +5,7 @@ import math
 
 from actionlib import SimpleActionClient
 
-from navigation.srv import NavigateTo, NavigateToResponse
+from gaan_msgs.srv import NavigateTo, NavigateToResponse
 
 from move_base_msgs.msg import MoveBaseGoal, MoveBaseAction
 from actionlib_msgs.msg import GoalStatusArray
