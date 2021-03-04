@@ -6,6 +6,7 @@
 
 
 #This is a simple example for a custom action which utters "Hello World!"
+from time import sleep
 from random import choice
 
 from typing import Any, Text, Dict, List
@@ -21,8 +22,9 @@ class ActionsSearchCommand(Action):
         return "action_get_search_status"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        print(tracker.get_latest_entity_values("item"))
+        #print(tracker.get_latest_entity_values("item"))
         answer = choice(['success', 'failure'])
+        #sleep(3)
         # Wait for ROS respone
         return [SlotSet("search_status", answer)]
 
@@ -32,7 +34,8 @@ class ActionsBringCommand(Action):
         return "action_get_bring_status"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        print(tracker.get_latest_entity_values("item"))
+        #print(tracker.get_latest_entity_values("item"))
         # answer = choice(['success', 'failure'])
         # Wait for ROS respone
+        #sleep(3)
         return [SlotSet("bring_status", "success")]
