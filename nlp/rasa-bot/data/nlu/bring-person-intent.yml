@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- intent: bring/person
+  examples: |
+    - Bring me the [plumber](person).
+    - Bring me [Dr. Kimble](person).
+    - Can you bring me the [postman](person)?

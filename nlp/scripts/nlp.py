@@ -42,7 +42,6 @@ def new_game():
 
 
 @ask.intent("PickupIntent")
-def response(object):
 
     msg = render_template('find', object=object)
 

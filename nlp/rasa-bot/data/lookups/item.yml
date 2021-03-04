@@ -1,0 +1,25 @@
+version: "2.0"
+nlu:
+  - lookup: item
+    examples: |
+      - shoes
+      - keys
+      - newspaper
+      - telephone
+      - door
+      - tv
+      - milk
+      - fruits
+      - coffee
+      - mug
+      - plate
+      - mobile phone
+      - glasses
+      - cracker box
+      - trousers
+      - sweater
+      - laptop
+      - headphones
+      - remote
+      - pen
+      - paper

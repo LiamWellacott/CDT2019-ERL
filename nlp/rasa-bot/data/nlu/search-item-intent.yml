@@ -1,0 +1,67 @@
+version: "2.0"
+nlu:
+- intent: search_direct/item
+  examples: |
+    - Can you search for the [newspaper](item)?
+    - Can you search for my [keys](item)?
+    - Can you help me search for the [newspaper](item)?
+    - Can you help me search for my [keys](item)?
+    - Search for the [newspaper](item)?
+    - Search for my [keys](item)?
+    - Can you find the [newspaper](item)?
+    - Can you find my [keys](item)?
+    - Can you help me find the [newspaper](item)?
+    - Can you help me find my [keys](item)?
+    - Find the [newspaper](item) for me
+    - Find my [keys](item) for me
+    - Can you locate the [newspaper](item)?
+    - Can you locate my [keys](item)?
+    - Can you help me locate the [newspaper](item)?
+    - Can you help me locate my [keys](item)?
+    - Locate the [newspaper](item)?
+    - Locate my [keys](item)?
+    - Can you look for the [newspaper](item)?
+    - Can you look for my [keys](item)?
+    - Can you help me look for the [newspaper](item)?
+    - Can you help me look for my [keys](item)?
+    - Look for the [newspaper](item)?
+    - Look for my [keys](item)?
+    - Can you pinpoint the [newspaper](item)?
+    - Can you pinpoint my [keys](item)?
+    - Can you help me pinpoint the [newspaper](item)?
+    - Can you help me pinpoint my [keys](item)?
+    - Pinpoint the [newspaper](item)?
+    - Pinpoint my [keys](item)?
+    - Can you spot the [newspaper](item)?
+    - Can you spot my [keys](item)?
+    - Can you help me spot the [newspaper](item)?
+    - Can you help me spot my [keys](item)?
+    - Spot the [newspaper](item)?
+    - Spot my [keys](item)?
+    - Can you search for the [newspaper](item)
+    - Can you find my [glasses](item)?
+    - Can you search for my [glasses](item)?
+    - Can you search for the [cracker box](item)?
+    - Can you find the [telephone](item)?
+    - Can you find the [remote](item)?
+- intent: search_indirect/item
+  examples: |
+    - Do you know where the [newspaper](item) is?
+    - Do you know where my [keys](item) are?
+    - Do you know where my [mobile phone](item) is?
+    - Have you seen the [newspaper](item)?
+    - Have you seen my [keys](item)?
+    - Do you remember where the [newspaper](item) is?
+    - Do you remember where my [keys](item) is?
+    - Do you remember where I left the [newspaper](item)?
+    - Do you remember where I left my [keys](item)?
+    - Do you know  where I left the [newspaper](item)?
+    - Do you know  where I left my [keys](item)?
+    - Do you know the location of the [remote](item)?
+    - Do you know the location of my [keys](item)?
+    - Do you know where I can find my [keys](item)?
+    - Do you know where I can find the [remote](item)?
+    - Do you know where my [keys](item) are?
+    - Do you know where I left my [keys](item)?
+    - Where are my [shoes](item)?
+    - Is there any [milk](item)?

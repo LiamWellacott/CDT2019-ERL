@@ -1,0 +1,83 @@
+version: "2.0"
+
+stories:
+- story: search indirect affirm success item
+  steps:
+  - intent: greet
+  - action: utter_ready
+  - intent: search_indirect
+  - slot_was_set:
+    - item
+  - action: utter_search_offer
+  - intent: affirm
+  - action: utter_search_accept
+  - action: action_get_search_status
+  - slot_was_set:
+    - search_status: success
+  - action: utter_search_success/item
+  - action: utter_bring_offer
+  - intent: affirm
+  - action: utter_bring_accept
+  - action: action_get_bring_status
+  - slot_was_set:
+    - bring_status: success
+  - action: utter_handover/item
+
+- story: search indirect affirm failure item
+  steps:
+  - intent: greet
+  - action: utter_ready
+  - intent: search_indirect
+  - slot_was_set:
+    - item
+  - action: utter_search_offer
+  - intent: affirm
+  - action: utter_search_accept
+  - action: action_get_search_status
+  - slot_was_set:
+    - search_status: failure
+  - action: utter_search_failure/item
+
+- story: search indirect deny item
+  steps:
+  - intent: greet
+  - action: utter_ready
+  - intent: search_indirect
+  - slot_was_set:
+    - item
+  - action: utter_search_offer
+  - intent: deny
+  - action: utter_happy
+
+- story: search direct success item
+  steps:
+  - intent: greet
+  - action: utter_ready
+  - intent: search_direct
+  - slot_was_set:
+    - item
+  - action: utter_search_accept
+  - action: action_get_search_status
+  - slot_was_set:
+    - search_status: success
+  - action: utter_search_success/item
+  - action: utter_bring_offer
+  - intent: affirm
+  - action: utter_bring_accept
+  - action: action_get_bring_status
+  - slot_was_set:
+    - bring_status: success
+  - action: utter_handover/item
+
+- story: search direct failure item
+  steps:
+  - intent: greet
+  - action: utter_ready
+  - intent: search_direct
+  - slot_was_set:
+    - item
+  - action: utter_search_accept
+  - action: action_get_search_status
+  - slot_was_set:
+    - search_status: failure
+  - action: utter_search_failure/item

@@ -1,0 +1,32 @@
+version: "2.0"
+
+stories:
+
+  - story: bring success
+    steps:
+    - intent: greet
+    - action: utter_ready
+    - intent: bring
+    - slot_was_set:
+      - item
+    - action: utter_bring_confirmation
+    - intent: affirm
+    - action: utter_bring_accept
+    - action: action_get_bring_status
+    - slot_was_set:
+      - bring_status: success
+    - action: utter_handover/item
+
+  - story: bring failure
+    steps:
+    - intent: greet
+    - action: utter_ready
+    - intent: bring
+    - slot_was_set:
+      - item
+    - action: utter_bring_confirmation
+    - intent: affirm
+    - action: utter_bring_accept
+    - action: action_get_bring_status
+    - slot_was_set:
+      - bring_status: failure
