@@ -29,8 +29,9 @@ for name in MoveItErrorCodes.__dict__.keys():
 class State(Enum):
     IDLE = 0
     PICKING = 1
-    PLACING = 2
-    PRESENT = 3
+    HOLDING = 2
+    PLACING = 3
+    PRESENT = 4
 
 class ManipulationServer(object):
     def __init__(self):
@@ -42,7 +43,8 @@ class ManipulationServer(object):
         ####
         ##Service## 
 
-        s = rospy.Service('grasp_object', GraspObject, self.setPick)
+        s = rospy.Service('manipulate_object', GraspObject, self.setState)
+
         
         ####
         ##Client## 
@@ -56,6 +58,7 @@ class ManipulationServer(object):
 
 
         self.pick_as = SimpleActionClient('/pickup_pose', PickUpPoseAction)
+        self.place_as = SimpleActionClient('/place_pose', PickUpPoseAction)
 
 
 
@@ -93,23 +96,24 @@ class ManipulationServer(object):
     def unfold_arm(self):
         self.play_motion("safe_unfold")
 
-
     def tuck_arm(self):
         self.play_motion("home")
 
     def arm_out(self):
         self.play_motion("arm_out")
-
+    
+    def open_hand(self):
+        self.play_motion("open_hand")
 
     def _reset(self):
         self.state = State.IDLE
 
-
-    def setPick(self, msg):
-        self._reset()
-        self.state = State.PICKING
-        self.req_goal.object_pose.pose = msg.goal_pose
-        return GraspObjectResponse(True)
+    # ------------ Obsolete
+    # def setPick(self, msg):
+    #     self._reset()
+    #     self.state = State.PICKING
+    #     self.req_goal.object_pose.pose = msg.goal_pose
+    #     return GraspObjectResponse(True)
 
     def pick(self):
         #Service calls this function after receiving the pose
@@ -132,11 +136,11 @@ class ManipulationServer(object):
         #Set state to idle
         self._reset()    
 
-    def setPlace(self, msg):
-        self._reset()
-        self.state = State.PLACING
-        self.req_goal.object_pose.pose = msg.goal_pose
-        return GraspObjectResponse(True)
+    # def setPlace(self, msg):
+    #     self._reset()
+    #     self.state = State.PLACING
+    #     self.req_goal.object_pose.pose = msg.goal_pose
+    #     return GraspObjectResponse(True)
 
     def place(self):
         #Service calls this function after receiving the pose to place the object
@@ -144,12 +148,12 @@ class ManipulationServer(object):
         self.unfold_arm()
 
         #Send goal to pick_and_place_server
-        self.pick_as.send_goal_and_wait(self.req_goal)
+        self.place_as.send_goal_and_wait(self.req_goal)
 
         #Read the return code of server
-        result = self.pick_as.get_result()
+        result = self.place_as.get_result()
         if str(moveit_error_dict[result.error_code]) == "SUCCESS":
-            rospy.loginfo("Pick Action finished succesfully")
+            rospy.loginfo("Place action finished succesfully")
         else:
             rospy.logerr("Failed to pick, not trying further")
 
@@ -166,6 +170,38 @@ class ManipulationServer(object):
         self.state= State.PRESENT
         return GraspObjectResponse(True)
 
+    def present(self):
+        #extend the arm out
+        self.arm_out()
+
+        self.open_hand()
+
+        #Set state to idle
+        self._reset()   
+
+        return
+
+    def setState(self,msg):
+        #Copy the pose in to the object
+        self.req_goal.object_pose.pose = msg.goal_pose
+
+        #If Idle, Grasping, move the state to the Grasping or Holding state respectively
+        if self.state <= 2:
+            self.state += 1
+
+        #IF the current state is that the robot is holding an object
+        elif self.state == State.HOLDING:
+            #If the message tells the robot to place an object
+            if msg.act == 'place':
+                self.state = State.PLACING    
+            #If the message tells the robot to hold out an object   
+            elif msg.act == 'present':
+                self.state = State.PRESENT
+            else:
+                rospy.logerr("No Instruction Passed: Please include whether to Place or Present the held object.")
+                
+
+        return GraspObjectResponse(True)
 
     def step(self):
         # execute behaviour
@@ -173,6 +209,8 @@ class ManipulationServer(object):
             self.pick()
         elif self.state == State.PLACING:
             self.place()
+        elif self.state == State.PRESENT:
+            self.present()
 
 
 
