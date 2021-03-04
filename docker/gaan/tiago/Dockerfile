@@ -12,6 +12,8 @@ RUN apt install -q -y git-lfs
 RUN git lfs install
 ENV GAAN_WS=/gaan-ws
 
+# TODO remove source commands?
+
 RUN source /opt/ros/melodic/setup.bash && \
     mkdir -p $GAAN_WS/src && \
     cd $GAAN_WS/src && \
@@ -22,7 +24,6 @@ RUN cmake --version
 
 RUN source /opt/ros/melodic/setup.bash && \
     cd $GAAN_WS && \
-    catkin_make && \
     wget https://raw.githubusercontent.com/pal-robotics/tiago_tutorials/kinetic-devel/tiago_public-melodic.rosinstall && \
     rosinstall src /opt/ros/melodic tiago_public-melodic.rosinstall
 
@@ -33,16 +34,14 @@ RUN source /opt/ros/melodic/setup.bash && \
 RUN source /opt/ros/melodic/setup.bash && \
     cd $GAAN_WS && \
     rosdep install --from-paths src --ignore-src -y --rosdistro melodic --skip-keys="opencv2 opencv2-nonfree pal_laser_filters speed_limit_node sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup opencv3" && \
-    source /opt/ros/melodic/setup.bash && \
-    catkin_make -j 4
-
+    source /opt/ros/melodic/setup.bash
 
 RUN source /opt/ros/melodic/setup.bash && \
     cd $GAAN_WS/src && \
     git clone https://github.com/rockin-robot-challenge/at_home_rsbb_comm_ros.git && \
     cd at_home_rsbb_comm_ros && \
-    git submodule update --init && \
-    cd ../.. && \
-    catkin_make
+    git submodule update --init
+
+RUN echo "source "$GAAN_WS"/devel/setup.bash" >> /root/.bashrc
 
 RUN cmake --version

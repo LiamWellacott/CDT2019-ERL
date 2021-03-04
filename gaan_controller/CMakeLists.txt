@@ -8,7 +8,7 @@ project(gaan_controller)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  face-rec
+  gaan_face_rec
   navigation
   nlp
   roscpp
@@ -108,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES gaan_controller
-#  CATKIN_DEPENDS face-rec navigation nlp roscpp rospy
+#  CATKIN_DEPENDS gaan_face_rec navigation nlp roscpp rospy
 #  DEPENDS system_lib
 )
 

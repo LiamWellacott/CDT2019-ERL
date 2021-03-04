@@ -1,4 +1,4 @@
-FROM erl/ros-melodic:nvidia-tensorflow
+FROM gaan/ros-melodic:nvidia-tensorflow
 
 RUN cmake --version
 
@@ -47,7 +47,6 @@ RUN echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
 RUN echo "export ROSLAUNCH_SSH_UNKNOWN=1" >> /root/.bashrc
 RUN echo "source /opt/ros/melodic/setup.zsh" >> /root/.zshrc
 RUN echo "export ROSLAUNCH_SSH_UNKNOWN=1" >> /root/.zshrc
-
 
 RUN apt update && \
     apt install ros-melodic-camera-info-manager-py -y && \

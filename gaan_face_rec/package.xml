@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>face-rec</name>
+  <name>gaan_face_rec</name>
   <version>0.0.0</version>
-  <description>The face-rec package</description>
+  <description>The gaan_face_rec package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/face-rec</url> -->
+  <!-- <url type="website">http://wiki.ros.org/gaan_face_rec</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
