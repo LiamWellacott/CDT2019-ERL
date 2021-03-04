@@ -29,6 +29,7 @@ pip3 install -r requirements.txt
 ``` bash
 tts --text "Hello Tiago" --model_name "tts_models/en/ljspeech/glow-tts" --vocoder_name "vocoder_models/en/ljspeech/mulitband-melgan"
 ```
+
 2. Create tts_models folder and copy downloaded models from `/home/$USER/.local/share/tts`
 3. Rename to `tts_models-en-ljspeech-glow-tts-config.json` and `tts_models-en-ljspeech-glow-tts-model.pth.tar`
 
