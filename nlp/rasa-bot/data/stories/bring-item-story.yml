@@ -4,6 +4,7 @@ stories:
 
   - story: bring success
     steps:
+    - intent: greet
     - action: utter_ready
     - intent: bring
     - slot_was_set:
@@ -14,10 +15,11 @@ stories:
     - action: action_get_bring_status
     - slot_was_set:
       - bring_status: success
-    - action: utter_handover_item
+    - action: utter_handover/item
 
   - story: bring failure
     steps:
+    - intent: greet
     - action: utter_ready
     - intent: bring
     - slot_was_set:

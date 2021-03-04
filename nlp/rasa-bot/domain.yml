@@ -49,6 +49,7 @@ slots:
     - pending
     - success
     - failure
+    initial_value: pending
   bring_status:
     type: categorical
     influence_conversation: true
@@ -56,7 +57,7 @@ slots:
     - pending
     - success
     - failure
-
+    initial_value: pending
 
 responses:
   utter_greet:
@@ -72,6 +73,8 @@ responses:
   - text: Bye
   utter_iamabot:
   - text: I am a bot, powered by Rasa.
+  utter_ready:
+  - text: Good morning Granny Annie, how can I help you?
   utter_search_offer:
   - text: Should I search for it?
   utter_search_accept:
@@ -86,10 +89,6 @@ responses:
   - text: Couldn't find them
   utter_bring_offer:
   - text: Should I bring it to you?
-  utter_bring_finish:
-  - text: There you go
-  utter_ready:
-  - text: Good morning Granny Annie, how can I help you?
   utter_bring_confirmation:
   - text: You'd like me to bring you the {item}. Have I understood you correctly?
   utter_bring_accept:
