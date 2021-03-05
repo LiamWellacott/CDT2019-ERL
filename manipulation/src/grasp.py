@@ -129,12 +129,13 @@ class ManipulationServer(object):
             rospy.loginfo("Pick Action finished succesfully")
         else:
             rospy.logerr("Failed to pick, not trying further")
+            #Set state to idle
+            self._reset()    
 
         #Fold the arm back to a neutral position
         self.tuck_arm()
 
-        #Set state to idle
-        self._reset()    
+
 
     # def setPlace(self, msg):
     #     self._reset()
@@ -154,14 +155,14 @@ class ManipulationServer(object):
         result = self.place_as.get_result()
         if str(moveit_error_dict[result.error_code]) == "SUCCESS":
             rospy.loginfo("Place action finished succesfully")
+            #Set state to idle
+            self._reset()   
+
         else:
-            rospy.logerr("Failed to pick, not trying further")
+            rospy.logerr("Failed to place, not trying further")
 
         #Fold the arm back to a neutral position
         self.tuck_arm()
-
-        #Set state to idle
-        self._reset()   
 
         return
 
@@ -186,8 +187,9 @@ class ManipulationServer(object):
         self.req_goal.object_pose.pose = msg.goal_pose
 
         #If Idle, Grasping, move the state to the Grasping or Holding state respectively
-        if self.state <= 2:
+        if self.state <= 1:
             self.state += 1
+            
 
         #IF the current state is that the robot is holding an object
         elif self.state == State.HOLDING:
@@ -199,8 +201,8 @@ class ManipulationServer(object):
                 self.state = State.PRESENT
             else:
                 rospy.logerr("No Instruction Passed: Please include whether to Place or Present the held object.")
-                
-
+        
+        rospy.loginfo("setState: %i", self.state)
         return GraspObjectResponse(True)
 
     def step(self):
