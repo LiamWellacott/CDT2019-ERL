@@ -4,12 +4,12 @@ from datetime import datetime
 import deepspeech
 from halo import Halo
 import requests
-import simpleaudio as sa
+#import simpleaudio as sa
 import json
 import numpy as np
 
 from stt import VADAudio
-from tts import TTS_CONFIG, TTS_MODEL_PATH, VOCODER_CONFIG, VOCODER_MODEL_PATH, OUT_FILE, use_cuda, load_model
+#from tts import TTS_CONFIG, TTS_MODEL_PATH, VOCODER_CONFIG, VOCODER_MODEL_PATH, OUT_FILE, use_cuda, load_model
 logging.basicConfig(level=20)
 
 def main(ARGS):
@@ -64,11 +64,11 @@ def main(ARGS):
                     json_text = json.dumps(text)
                     json_obj = json.loads(json_text)
                     print(json_obj["text"])
-                    load_model(json_obj["text"], TTS_MODEL_PATH, TTS_CONFIG, VOCODER_MODEL_PATH, VOCODER_CONFIG, use_cuda, OUT_FILE)
-                    wave_obj = sa.WaveObject.from_wave_file(OUT_FILE)
-                    play_obj = wave_obj.play()
-                    play_obj.wait_done()  # Wait until sound has finished playing
-                    play_obj.stop()
+                    # load_model(json_obj["text"], TTS_MODEL_PATH, TTS_CONFIG, VOCODER_MODEL_PATH, VOCODER_CONFIG, use_cuda, OUT_FILE)
+                    # wave_obj = sa.WaveObject.from_wave_file(OUT_FILE)
+                    # play_obj = wave_obj.play()
+                    # play_obj.wait_done()  # Wait until sound has finished playing
+                    # play_obj.stop()
             
             # Listen from microphone
             vad_audio.stream.start_stream()

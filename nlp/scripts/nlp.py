@@ -1,22 +1,9 @@
 #!/usr/bin/env python
 
-import logging
-
 import rospy
 from std_msgs.msg import String
 
-from random import randint
-
-from flask import Flask, render_template
-
-from flask_ask import Ask, statement, question, session, convert_errors #Added convert_errors ~Emilyann
-
-from erl_msgs.srv import Speech, SpeechResponse, Command
-
-
-app = Flask(__name__)
-
-ask = Ask(app, "/")
+from gaan_msgs.srv import Speech, SpeechResponse, Command
 
 def handle_speech(req):
     rospy.loginfo("Saying: " + req)

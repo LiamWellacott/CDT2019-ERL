@@ -1,9 +1,13 @@
-# Ubuntu dependencies
+# Set up
+
+**NOTE: you do not have to do this if you are using docker**
+
+## Ubuntu dependencies
 ``` bash
 sudo apt install -y python3-dev python3-pip python3-venv
 ```
 
-# Create python environment
+## Create python environment
 - Navigate to Rasa-bot
 - It is important to use environment as the dependencies for rasa conflict with the dependencies for speech IO
 
@@ -12,15 +16,20 @@ python3 -m venv ./rasa
 source ./rasa/bin/activate
 ```
 
-# Pip Dependencies
+## Pip Dependencies
 ``` bash
 pip3 install --upgrade pip
 pip3 install -r requirements.txt
 ```
+(requirements moved to docker)
 
-# Run Rasa
-- Use `rasa train` to train model
-- Run `rasa run actions --actions actions.actions` first
+# Running Rasa
+
+First time:
+- Run `rasa train` to train a model
+- Run `rasa run actions --actions actions.actions` first (what is this for?)
+
+Once the above has been done once.
 - Use `rasa shell` to run rasa in the terminal or use `rasa run` to run as a web service (use curl to test. See below)
 
 # Test Rasa REST API

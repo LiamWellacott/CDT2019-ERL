@@ -4,7 +4,4 @@ webrtcvad~=2.0.10
 halo~=0.0.18
 numpy>=1.15.1
 scipy>=1.1.0
-requests
-TTS
-torch
-simpleaudio
+request
