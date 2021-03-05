@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+
+<!-- TODO Paths need to be updated to docker paths -->
+<node pkg="nlp" type="rasa.sh" name="rasa_bot"/>
+
+<node pkg="nlp" type="stt.sh" name="speech_to_text"/>
+
+<node pkg="nlp" type="nlp.py" name="nlp_node" output="screen"/>
+
+</launch>

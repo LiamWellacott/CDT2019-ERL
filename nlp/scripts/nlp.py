@@ -18,13 +18,15 @@ class NLP:
     def userMsgCallback(self, msg):
         rospy.loginfo(msg.data)
 
-        response = requests.post('http://localhost:5005/webhooks/rest/webhook', json = {'sender': 'Tiago', 'message': text})
+        response = requests.post('http://localhost:5005/webhooks/rest/webhook', json = {'sender': 'Tiago', 'message': msg.data})
         response_obj = eval(response.text)
         for text in response_obj:
             json_text = json.dumps(text)
             json_obj = json.loads(json_text)
-            json_obj["text"])
+            rospy.loginfo(json_obj["text"])
 
+    def speak(self):
+        return # TODO
 
 def main():
 
