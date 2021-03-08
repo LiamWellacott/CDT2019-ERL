@@ -108,12 +108,6 @@ class ManipulationServer(object):
     def _reset(self):
         self.state = State.IDLE
 
-    # ------------ Obsolete
-    # def setPick(self, msg):
-    #     self._reset()
-    #     self.state = State.PICKING
-    #     self.req_goal.object_pose.pose = msg.goal_pose
-    #     return GraspObjectResponse(True)
 
     def pick(self):
         #Service calls this function after receiving the pose
@@ -136,13 +130,6 @@ class ManipulationServer(object):
         self.tuck_arm()
 
 
-
-    # def setPlace(self, msg):
-    #     self._reset()
-    #     self.state = State.PLACING
-    #     self.req_goal.object_pose.pose = msg.goal_pose
-    #     return GraspObjectResponse(True)
-
     def place(self):
         #Service calls this function after receiving the pose to place the object
         #unfold the arm
@@ -155,14 +142,15 @@ class ManipulationServer(object):
         result = self.place_as.get_result()
         if str(moveit_error_dict[result.error_code]) == "SUCCESS":
             rospy.loginfo("Place action finished succesfully")
-            #Set state to idle
-            self._reset()   
-
+            
         else:
             rospy.logerr("Failed to place, not trying further")
 
         #Fold the arm back to a neutral position
         self.tuck_arm()
+        
+        #Set state to idle
+        self._reset()   
 
         return
 
