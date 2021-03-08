@@ -37,7 +37,7 @@ class face_rec_node(object):
 
 
         self.cam_sub = rospy.Subscriber("/xtion/rgb/image_raw", Image, self.save_last)
-        self.face_rec_srv = rospy.Service("/erl/face_rec", Faces, self.recognise_person)
+        self.face_rec_srv = rospy.Service("/gaan/face_rec", Faces, self.recognise_person)
 
         #self.track_pub = rospy.Publisher('/tiago/vision/track', String, queue_size=10)
         #self.cam_track_sub = rospy.Subscriber("/xtion/rgb/image_raw", Image, self.track_person)

@@ -5,6 +5,7 @@ from std_msgs.msg import String
 import json
 import requests
 
+from gaan_msgs.msg import Argument
 from gaan_msgs.srv import Speech, SpeechResponse, Command
 
 from sound_play.libsoundplay import SoundClient
@@ -25,7 +26,6 @@ class NLP:
         # Used for TTS     
         self.sound_client = SoundClient()   
 
-
     def userMsgCallback(self, msg):
 
         # Log interpreted message
@@ -37,17 +37,37 @@ class NLP:
         for text in response_obj:
             json_text = json.dumps(text)
             json_obj = json.loads(json_text)
+            response_text = json_obj["text"]
 
             # Log response
-            rospy.loginfo(json_obj["text"])
+            rospy.loginfo(response_text)
 
             # Say response
-            self.sound_client.say(json_obj["text"])
+            self.sound_client.say(response_text)
 
-            # TODO match the response to a predefined message to decide whether to launch a command
             # Note there should be an interpretation layer somewhere in our NLP system which attempts to fit incomming sentences into
             # the competition grammar, rasa should be capable of this apparently, but we didn't get far implementing this.
             # Therefore we have the following hack to simply match the single command we are capabable of supporting.
+            trigger_string = "You'd like me to bring you the "
+            if (response_text.startswith(trigger_string)):
+
+                rospy.wait_for_service('/gaan/nlp/command')
+                action = 'BRINGING'
+
+                theme = self.createArgument('theme',response_text[len(trigger_string): response_text.find('.')] )
+                # below should come from the sem map after being converted from raw string to known object tag (e.g. "me" should become "annie" )
+                source = self.createArgument('source', 'kitchen_island')
+                beneficiary = self.createArgument('beneficiary', 'annie')
+
+                arguments = [theme, source, beneficiary]
+                
+                self.command(action, arguments, rospy.Time.now())
+
+    def createArgument(self, name, role_filler):
+        arg = Argument()
+        arg.arg_name = name
+        arg.role_filler = role_filler
+        return arg
 
     def speakHandler(self, req):
         self.sound_client.say(req.text)
@@ -61,12 +81,6 @@ def main():
     nlp = NLP()
 
     rospy.spin()
-    # rate = rospy.Rate(1)
-
-    # while True:
-
-    #     nlp.step()
     
-
 if __name__ == '__main__':
     main()

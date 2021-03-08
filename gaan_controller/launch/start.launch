@@ -50,7 +50,9 @@
   <!-- load sem map -->
   <rosparam command="load" file="$(find navigation)/semmap/map.yaml"/>
 
+  <!-- TODO clean up this file and move skill specific spin up inside the skill -->
   <node name="gaan_navigation" pkg="navigation" type="nav.py" output="screen"/>
+  <include file="$(find nlp)/launch/nlp.launch"/>
 
   <node name="gaan_controller" pkg="gaan_controller" type="controller.py" output="screen"/>
 

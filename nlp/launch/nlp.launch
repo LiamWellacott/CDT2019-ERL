@@ -4,6 +4,8 @@
 <!-- TODO Paths need to be updated to docker paths -->
 <node pkg="nlp" type="rasa.sh" name="rasa_bot"/>
 
+<node pkg="nlp" type="rasa_action.sh" name="rasa_bot_action"/>
+
 <node pkg="nlp" type="stt.sh" name="speech_to_text"/>
 
 <node pkg="nlp" type="nlp.py" name="nlp_node" output="screen"/>

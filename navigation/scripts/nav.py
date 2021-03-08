@@ -30,7 +30,7 @@ class Navigation:
 
         # services
         self.robot_pose = Pose()
-        s = rospy.Service('navigate_to', NavigateTo, self.setNavigate)
+        s = rospy.Service('/gaan/navigation/navigate_to', NavigateTo, self.setNavigate)
 
         # pub/sub
         self.nav_done_pub = rospy.Publisher('nav_done', Bool, queue_size=10)
