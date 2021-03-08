@@ -22,6 +22,8 @@ docker run -it \
     --runtime=nvidia \
     --volume="`pwd`../..:/gaan-ws/src/gaan:rw" \
     --device /dev/video0 \
+    --device /dev/snd \
+    --privileged=true \
     -p 5000:5000 \
     --name gaan \
     gaan/base:gpu \

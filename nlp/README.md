@@ -8,4 +8,10 @@ NLP is split into three parts due to what is available on Tiago.
 
 # Running NLP
 
-TODO
+run ```roslaunch nlp nlp.launch``` which will start all three nlp components
+
+Note on running with docker: 
+
+# Interfaces
+
+## 
