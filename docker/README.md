@@ -33,6 +33,8 @@ To have additional terminals inside the docker environment you can re run ```./d
 
 Before you run any ros nodes you have to ```source devel/setup.bash```, remember that this is separate from your regular environment so any commands in .bashrc are not run.
 
+When you run the container for the first time you will have to run ```catkin_make```, this builds the gaan packages which are unavailable to docker until the checkout of the repo is mounted in ```./dev-first.bash```.
+
 # Add dependencies
 
 To add new dependencies just instert the terminal command in the right dockerfile.

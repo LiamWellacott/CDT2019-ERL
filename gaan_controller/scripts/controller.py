@@ -29,7 +29,9 @@ class Controller(object):
         # subscribe to RSBB topics
         rospy.Subscriber('roah_rsbb/tablet/call', Empty, self._setSummoned)
         rospy.Subscriber('roah_rsbb/tablet/position', Pose2D, self._setSummonLocation)
+
         nlp_service = rospy.Service('voc_cmd', Command, self._vocal_commandCB)
+
         # prepare to call GAAN services
         self.navigate_to = rospy.ServiceProxy('navigate_to', NavigateTo)
         self.face_rec = rospy.ServiceProxy('/erl/face_rec', Faces)
@@ -119,9 +121,9 @@ class Controller(object):
         self.state = State.RECEIVE_INSTRUCTION
 
     def sendSpeech(self, msg):
-        rospy.wait_for_service('speech')
+        rospy.wait_for_service('/gaan/nlp/speech')
         try:
-            speech_service = rospy.ServiceProxy('speech', Speech)
+            speech_service = rospy.ServiceProxy('/gaan/nlp/speech', Speech)
             ret = speech_service(msg)
             return ret
         except rospy.ServiceException as e:

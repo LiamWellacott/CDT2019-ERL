@@ -72,6 +72,13 @@ RUN mkdir stt_models && cd stt_models && \
 
 RUN apt install -y alsa-base alsa-utils
 
+# get sound_play for TTS
+# TODO Test this
+RUN cd $GAAN_WS/src && \
+    git clone https://github.com/ros-drivers/audio_common.git && \
+    apt install libgstreamer-plugins-base1.0-dev && \
+    rosdep install sound_play
+
 # Build the ros workspace
 RUN cd $GAAN_WS && \
     source /opt/ros/melodic/setup.bash && \
