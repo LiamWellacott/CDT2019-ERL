@@ -14,8 +14,8 @@
 
     <node pkg="tf" type="static_transform_publisher" name="Camera" args="0 0 0 0 0 0 1 /map /head_camera 100" />
 
-    <node name="face_rec" pkg="gaan_face_rec" type="face_rec.py"/>
+    <node name="face_rec" pkg="face_rec" type="face_rec.py"/>
 
-    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find gaan_face_rec)/rviz/demo.rviz" />
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find face_rec)/rviz/demo.rviz" />
 
 </launch>

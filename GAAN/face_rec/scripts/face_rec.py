@@ -31,7 +31,7 @@ class face_rec_node(object):
         self.process_frame = 2
         self.frame=None
 
-        dir = rospack.get_path("gaan_face_rec")
+        dir = rospack.get_path("face_rec")
         self.init_known(os.path.join(dir, "faces", "known"))
 
 
@@ -87,7 +87,7 @@ class face_rec_node(object):
         # convert back to RGB, cv uses BGR conventiion.
 
         face_loc = fr.face_locations(small_frame, model='cnn')
-        rospy.loginfo("gaan_face_rec: {} face detected ".format(len(face_loc)))
+        rospy.loginfo("face_rec: {} face detected ".format(len(face_loc)))
         face_encodings = fr.face_encodings(small_frame, face_loc)
 
         face_names = []

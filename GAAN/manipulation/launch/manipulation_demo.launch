@@ -3,7 +3,7 @@
 
   <arg name="rviz"  default="true"/>
   <!-- Call the sim environment -->
-  <include file="$(find hello_tiago)/launch/base_ralt_tiago.launch" >
+  <include file="$(find sim_launch)/launch/base_ralt_tiago.launch" >
       <arg name="gzpose" value="-x -3.55 -y 1.0 -z 0.8 -R 0.0 -P 0.0 -Y 0.0"/>
       <arg name="robot" value="steel"/>
       <arg name="use_moveit_camera" value="true"/> 
