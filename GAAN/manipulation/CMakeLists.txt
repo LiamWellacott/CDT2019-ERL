@@ -56,10 +56,9 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-   FILES
-   GraspObject.srv
- )
+# add_service_files(
+#    FILES
+#  )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -69,18 +68,18 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-   DEPENDENCIES
-   geometry_msgs 
-   std_msgs 
+# generate_messages(
+#    DEPENDENCIES
+#    geometry_msgs 
+#    std_msgs 
 
-   #moveit_msgs
-   #trajectory_msgs
-)
+#    #moveit_msgs
+#    #trajectory_msgs
+# )
 
-catkin_install_python(PROGRAMS src/grasp.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+# catkin_install_python(PROGRAMS src/grasp.py
+#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##

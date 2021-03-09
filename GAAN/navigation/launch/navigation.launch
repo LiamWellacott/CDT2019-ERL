@@ -1,0 +1,27 @@
+<launch>
+
+  <arg name="map" default="$(find navigation)/maps/rawmap"/>
+
+  <!-- bring up navigation stack -->
+  <include file="$(find tiago_2dnav_gazebo)/launch/navigation.launch">
+    <!-- <arg name="state"          value="mapping"/> --> <!-- if you need to create a new map, change the state here-->
+    <arg name="state"          value="localization"/>
+    <arg name="mapping"        value="gmapping"/>
+    <arg name="local_planner"  value="teb"/>
+    <arg name="public_sim"     value="true"/>
+    <arg name="rgbd_sensors"   value="false"/> <!-- requires software for rgbd sensors apparently-->
+    <arg name="map"            value="$(arg map)"/>
+  </include>
+
+  <!--   pointcloud to laserscan-->
+  <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
+    <arg name="cloud" value="/xtion/depth_registered/points"/>
+  </include>
+
+  <!-- load sem map -->
+  <rosparam command="load" file="$(find navigation)/semmap/map.yaml"/>
+
+  <!-- load navigation node -->
+  <node name="gaan_navigation" pkg="navigation" type="nav.py" output="screen"/>
+
+</launch>

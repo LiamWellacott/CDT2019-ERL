@@ -7,7 +7,7 @@
   <arg name="laser_model"  default="sick-571"/>
   <arg name="camera_model"  default="orbbec-astra"/>
   <arg name="public_sim" default="true"/>
-  <arg name="use_moveit_camera" default="false"/>
+  <arg name="use_moveit_camera" default="true"/>
   <arg name="use_dynamic_footprint" default="false"/>
 
   <arg name="map" default="$(find navigation)/maps/rawmap"/>
@@ -27,32 +27,16 @@
   <!-- make sure the arm is nice and cosy-->
   <node name="tuck_arm" pkg="tiago_gazebo" type="tuck_arm.py" output="screen"/>
 
-  <!-- bring up navigation stack -->
-  <include file="$(find tiago_2dnav_gazebo)/launch/navigation.launch">
-    <!-- <arg name="state"          value="mapping"/> --> <!-- if you need to create a new map, change the state here-->
-    <arg name="state"          value="localization"/>
-    <arg name="mapping"        value="gmapping"/>
-    <arg name="local_planner"  value="teb"/>
-    <arg name="public_sim"     value="true"/>
-    <arg name="rgbd_sensors"   value="false"/> <!-- requires software for rgbd sensors apparently-->
-    <arg name="map"            value="$(arg map)"/>
-  </include>
-
+  <!-- launch visualisation -->
   <node name="rviz" pkg="rviz" type="rviz"
         args="-d $(find tiago_2dnav)/config/rviz/navigation_public_sim.rviz"/>
 
-  <!--   pointcloud to laserscan-->
-  <include file="$(find tiago_laser_sensors)/launch/rgbd_cloud_laser.launch">
-    <arg name="cloud" value="/xtion/depth_registered/points"/>
-  </include>
-
   <!-- launch GAAN nodes -->
-  <!-- load sem map -->
-  <rosparam command="load" file="$(find navigation)/semmap/map.yaml"/>
-
-  <!-- TODO clean up this file and move skill specific spin up inside the skill -->
-  <node name="gaan_navigation" pkg="navigation" type="nav.py" output="screen"/>
   <include file="$(find nlp)/launch/nlp.launch"/>
+  <include file="$(find manipulation)/launch/start_manipulation.launch"/>
+  <include file="$(find navigation)/launch/navigation.launch">
+    <arg name="map" value="$(arg map)"/>
+  </include>
 
   <node name="gaan_controller" pkg="gaan_controller" type="controller.py" output="screen"/>
 

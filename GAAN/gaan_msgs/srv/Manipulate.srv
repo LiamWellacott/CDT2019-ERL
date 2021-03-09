@@ -1,0 +1,6 @@
+geometry_msgs/Pose goal_pose
+# possible action: PICK, PLACE, PRESENT
+string action
+---
+bool response
+

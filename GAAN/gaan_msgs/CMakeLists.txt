@@ -62,6 +62,7 @@ add_service_files(
   Speech.srv
   Faces.srv
   NavigateTo.srv
+  Manipulate.srv
 )
 
 ## Generate actions in the 'action' folder

@@ -1,4 +1,0 @@
-geometry_msgs/Pose goal_pose
-string act
----
-bool response

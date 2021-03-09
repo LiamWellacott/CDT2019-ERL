@@ -7,7 +7,7 @@ import copy
 from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import Pose2D, Pose
 
-from gaan_msgs.srv import Command, CommandResponse, Speech, Faces, NavigateTo
+from gaan_msgs.srv import Command, CommandResponse, Speech, Faces, NavigateTo, Manipulate
 
 from tf.transformations import quaternion_from_euler
 
@@ -27,14 +27,14 @@ class Controller(object):
         rospy.Subscriber('roah_rsbb/tablet/call', Empty, self._setSummoned)
         rospy.Subscriber('roah_rsbb/tablet/position', Pose2D, self._setSummonLocation)
 
+        # expose the command service to be used by the nlp module
         nlp_service = rospy.Service('/gaan/nlp/command', Command, self._vocal_commandCB)
 
         # prepare to call GAAN services
         self.navigate_to = rospy.ServiceProxy('/gaan/navigation/navigate_to', NavigateTo)
         self.face_rec = rospy.ServiceProxy('/gaan/face_rec', Faces)
         self.speak = rospy.ServiceProxy('/gaan/nlp/speech', Speech)
-
-        # subscribe to GANN topics
+        self.manipulate = rospy.ServiceProxy('/gaan/manipulate', Manipulate)
 
         # initialise semantic map
         self.sem_map = {}
@@ -62,6 +62,7 @@ class Controller(object):
         # bringing variables
         self.bringing_object_location = Pose()
         self.bringing_return_location = Pose()
+        self.place_mode = False # bringing may require place or present depending on the type of command given
 
         # TODO reset arm (or at least check it is ok to move)
 
@@ -118,6 +119,11 @@ class Controller(object):
                 # beneficiary or goal refer to where to bring the object
                 # if beneficiary used then a hand over should be performed instead of a furniture place TODO
                 elif arg.arg_name == 'beneficiary':
+                    self.place_mode = False
+                    self.bringing_return_location = self.sem_map[arg.role_filler]
+
+                elif arg.arg_name == 'goal':
+                    self.place_mode = True
                     self.bringing_return_location = self.sem_map[arg.role_filler]
 
                 # theme refers to the object to be brought
@@ -141,15 +147,33 @@ class Controller(object):
         # Send navigation request and wait until arrived
         self.navigateAndWait(self.sem_map['annie'])
 
-        # send a greeting to initiate conversation
-        self.speak("Hello, Granny Annie, How can I help you?")
+        # Check that it is granny annie TODO
+        # look up to annie's height TODO
 
-        # Request next instruction
-        self.state = State.RECEIVE_INSTRUCTION
+        # verify face to check it's annie
+        if self.isGrannyAnnie():
+
+            # send a greeting to initiate conversation
+            self.speak("Hello, Granny Annie, How can I help you?")
+
+            # Request next instruction
+            self.state = State.RECEIVE_INSTRUCTION
+
+        else:
+
+            # an imposter! nothing in particular to do here so going back to sleep
+            rospy.logerr('Summoned but granny annie was not detected, going back to idle')
+            self.state = State.IDLE
 
     def receiveInstruction(self):
         # remain in this state until a command is received from the user (state update via _vocal_commandCB)
         return 
+
+    def isGrannyAnnie(self):
+        # TODO I am not actually a granny, this has to be updated ideally by looking up the picture in the semantic map of granny annie
+        # uncomment to test if the facial recognition works
+        #return "liam" in self.get_faces()
+        return True
 
     def get_faces(self):
         rospy.wait_for_service('/gaan/face_rec')
@@ -169,29 +193,48 @@ class Controller(object):
 
         # object pose estimation TODO
         rospy.loginfo('LOOKING FOR OBJECT ON FURNITURE')
+        p = Pose() # Hardcoded position to test manipulation
+        p.position.x = 0.85
+        p.position.z = 1.03
+        p.orientation.w = 1.0
 
         # announce that the object has been found
         self.speak('I have found the cracker box')
 
-        # pick up object TODO
-        rospy.loginfo('TIME TO PICK')
+        # pick up object
+        # TODO fix manipulation
+        #self.manipulate(p, 'PICK')
 
-        # Go to the fetch destination
+        # Go to the destination
         self.navigateAndWait(self.bringing_return_location)
 
-        # identify a location to place the object TODO
-        rospy.loginfo('FINDING SOMEWHERE TO PUT THE OBJECT ON THE FURNITURE')
+        # if the request was to bring the object to a piece of furniture
+        if self.place_mode:
+            # identify a location to place the object TODO
+            rospy.loginfo('FINDING SOMEWHERE TO PUT THE OBJECT ON THE FURNITURE')
+            p = Pose() # Hardcoded position to test manipulation
+            p.position.x = 0.85
+            p.position.z = 0.5
+            p.orientation.w = 1.0
 
-        # place the object TODO
-        rospy.loginfo('TIME TO PLACE')
+            # place the object
+            # TODO fix manipulation
+            #self.manipulate(p, 'PLACE')
 
-        # announce that the object has been placed
-        self.speak('Here is the cracker box')
+            # announce that the object has been placed
+            self.speak('I have placed the object')
 
-        # return to annie
-        self.navigateAndWait(self.sem_map['annie'])
+            # return to annie
+            self.navigateAndWait(self.sem_map['annie'])
+
+        else: 
+            # present the object
+            # TODO fix manipulation
+            #self.manipulate(p, 'PRESENT')
 
         # request further instructions
+        self.speak('Is there anything else I can do for you?')
+
         self.state = State.RECEIVE_INSTRUCTION
 
     def step(self):
