@@ -137,21 +137,20 @@ class Controller(object):
 
     ### Main functions
     def summoned(self):
-        rospy.loginfo('WHO SUMMONS ME')
 
         # Send navigation request and wait until arrived
         self.navigateAndWait(self.sem_map['annie'])
+
+        # send a greeting to initiate conversation
+        self.speak("Hello, Granny Annie, How can I help you?")
 
         # Request next instruction
         self.state = State.RECEIVE_INSTRUCTION
 
     def receiveInstruction(self):
-
-        # send a greeting to initiate conversation
-        self.speak("Hello, Granny Annie, How can I help you?")
-
         # remain in this state until a command is received from the user (state update via _vocal_commandCB)
-        
+        return 
+
     def get_faces(self):
         rospy.wait_for_service('/gaan/face_rec')
         try:
