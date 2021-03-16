@@ -149,18 +149,19 @@ class ManipulationServer(object):
         
         response = True
 
-        # check if requested action is valid
-        actions = [e.value for e in Action]
-        if msg.action not in actions:
-            response = False
-            rospy.logerr("Invalid action requested from manipulate, received %s but must be one of: %s" % (msg.action, actions) )  
+        # # check if requested action is valid
+        # rospy.loginfo(type(Action))
+        # actions = [e.value for e in Action]
+        # if msg.action not in actions:
+        #     response = False
+        #     rospy.logerr("Invalid action requested from manipulate, received %s but must be one of: %s" % (msg.action, actions) )  
 
         # only allow pick requests if the current state is idle (not holding anything)
-        elif self.state == State.IDLE:
+        if self.state == State.IDLE:
             rospy.loginfo(msg.action)
-            rospy.loginfo(Action.PICK.value)
-            rospy.loginfo(msg.action == Action.PICK.value)
-            if msg.action == Action.PICK.value:
+            rospy.loginfo(Action.PICK)
+            rospy.loginfo(msg.action == Action.PICK)
+            if msg.action == Action.PICK:
                 self.pickup_goal.object_pose.pose = msg.goal_pose
                 self.pick()
 
@@ -171,12 +172,12 @@ class ManipulationServer(object):
 
         # only allow place/present if the robot is holding an object
         elif self.state == State.HOLDING:
-            if msg.action == Action.PLACE.value:
+            if msg.action == Action.PLACE:
                 # pickup goal used for both picking and placing in pick_and_place_server
                 self.pickup_goal.object_pose.pose = msg.goal_pose
                 self.place()
 
-            elif msg.action == Action.PRESENT.value:
+            elif msg.action == Action.PRESENT:
                 self.present()
 
             else:
