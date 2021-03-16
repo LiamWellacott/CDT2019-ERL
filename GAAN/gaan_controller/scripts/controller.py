@@ -227,11 +227,11 @@ class Controller(object):
             # return to annie
             self.navigateAndWait(self.sem_map['annie'])
 
-        else: 
+        #else: 
             # present the object
             # TODO fix manipulation
             #self.manipulate(p, 'PRESENT')
-
+        
         # request further instructions
         self.speak('Is there anything else I can do for you?')
 

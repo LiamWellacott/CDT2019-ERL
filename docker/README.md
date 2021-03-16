@@ -20,8 +20,10 @@ If you are running for the first time do the following. Note: we had a lot of is
 
 ```
 xhost +si:localuser:root
-
-touch /tmp/.docker.xauth-n
+XAUTH = /tmp/.docker.xauth-n
+touch $XAUTH
+xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+chmod a+r $XAUTH
 
 ./dev-first.bash
 ```
