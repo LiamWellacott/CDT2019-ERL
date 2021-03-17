@@ -1,4 +1,4 @@
-# CDT2019-ERL
+# CDT2019-ERL / Granny Annie's Android Nanny (GAAN)
 
 This is a competition entry for the European Robotic League and part of our PhD work at the Edinburgh Centre for Robotics Centre for Doctoral Training in Robotics and Autonomous Systems. The goal of this project is to produce a software system which is:
 
@@ -6,187 +6,48 @@ This is a competition entry for the European Robotic League and part of our PhD 
 - Flexible, modular, and easy to configure software (teams typically have half a day / one day) to configure their system to operate in the test-bed where the tournament takes place - ideally most of which should be usable for both HSR and Tiago
 - Robust (keep things simple, consider an integration and testing plan)
 
-In addition to the code available in this repo we have produced a [demonstration video]() and [team description paper]().
+In the end we didn't manage to create a competition ready system, but we learned a lot which we hope can be used for other teams to help them get started with the competition. In particular this repo provides:
 
-## Set up
+- A (mostly working) docker image and container for tiago, which should simplify the installation and set up phase for your project, if you are using this robot.
+- A virtual environment and task scenario which can be used to test your system functionality "restricted_task_3"
+- A software architecture which you can base a competition system on, you may want to replace some components to improve 
 
-### Before cloning this repo:
+## Setup and run guides
 
-1. Install ROS (version x) and other dependencies (TBD)
-2. Create a ros workspace and ``cd`` into the ``src`` directory:
+check the readme in ``docker`` for information on using that environment. I also tried to make a "setup your local machine guide" in ``setup.md`` in case you have issues with the docker environment.
 
-```
-mkdir -p ~/catkin_ws/src
-cd ~/catkin_ws/src
-```
-3. Clone this repo into the ``src`` directory.
+## On the test framework
 
-### Cloning the repo:
+Our idea was to design a number of "simple" scenarios to help bridge the gap between functional benchmarks and the full competition tasks. Currently we have only implemented a single scenario which we call "restricted task 3". In addition to providing the virtual environment we have also implemented enough of a "fake RSBB" so you can receieve a score for running the scenario (TODO). We hope this provides a tool for validating your system.
 
-1. Fork the repo on your github acount.
-2. Clone your fork locally in your ``src`` directory.
-```
-git clone https://github.com/{git_username}/CDT2019-ERL
-```
-3. Set the upstream repo. This will allow you to pull the latest changes from the main repo
-```
-cd CDT2019-ERL/
-git remote add upstream https://github.com/LiamWellacott/CDT2019-ERL.git
-```
-
-To update your local copy use ``fetch``, this will download branches etc. from the main repo.
-```
-git fetch upstream
-```
-
-To bring changes from the main repo into your repo (using the example of the main branch do:
-```
-# make sure you are on the branch you want to merge into locally
-git merge upstream/main
-
-# To push the result of the merge to your fork
-git push
-```
-
-### After cloning this repo
-
-1. ``cd`` to the ``src`` folder of the workspace, from the previous steps you should be there already
-2. Clone the virtual environments ([RALT virtual environment](https://github.com/LiamWellacott/Virtual-RALT-Standalone), [mbot environment](https://github.com/LiamWellacott/mbot_simulation_environments/tree/melodic)):
+To run the test scenario, in first terminal run:
 
 ```
-git clone https://github.com/care-group/Virtual-RALT-Standalone.git
-git clone https://github.com/LiamWellacott/mbot_simulation_environments.git
-```
-3. Install the TIAGo software. Below instructions adapted from [here](http://wiki.ros.org/Robots/TIAGo/Tutorials/Installation/TiagoSimulation).
-
-```
-# if you haven't used rosinstall before you may have to run:
-sudo apt install python-rosinstall
-
-# download the file "tiago_public.rosinstall" from  into ~/catkin_ws/
-cd ~/catkin_ws/
-nano tiago_public.rosinstall
-```
-Paste the copied content of [this](https://raw.githubusercontent.com/pal-robotics/tiago_tutorials/kinetic-devel/tiago_public-melodic.rosinstall) page and save the file in the root directory of the workspace (watch for the ROS distribution in the file name, make sure it matches what you downloaded)
-
-```
-rosinstall src /opt/ros/melodic tiago_public-melodic.rosinstall
-
-# ensure you have the dependencies required to build
-sudo rosdep init
-rosdep update
-## my install of moveit failed... you may need to run sudo apt-get update before running the next line
-rosdep install --from-paths src --ignore-src -y --rosdistro melodic --skip-keys="opencv2 opencv2-nonfree pal_laser_filters speed_limit_node sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup opencv3"
-
-# build
-catkin_make
-```
-4. clone the RSBB ROS communication repo into your src folder:
-```
-git clone https://github.com/rockin-robot-challenge/at_home_rsbb_comm_ros.git
-cd at_home_rsbb_comm_ros
-# make sure you do the following or catkin_make will fail
-# a repo with a very similar name is a submodule of this repo
-# make sure to rerun this if you ever update this repo
-git submodule update --init
-
-cd ../..
-catkin_make
-```
-
-5. In order for the robot to path through doors you must reduce the `inflation_radius` and `inflation_dist` parameter in the tiago planner configuration. This reduces the distance from an obstacle (e.g. furniture, door, wall) the robot is willing to cross. TODO create a script to do this or find a better way... You can find `inflation_radius` in `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/common/global_costmap_public_sim.yaml` and `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/common/local_costmap_public_sim.yaml`. You can find `inflation_dist` in `pal_navigation_cfg_public/pal_navigation_cfg_tiago/config/base/teb/local_planner.yaml`. I set the value to `0.15`.
-
-## Running
-
-1. Make sure the workspace is on the ros package path, check path with ``echo $ROS_PACKAGE_PATH``. You should make sure to comment out any previous ROS Workspaces that may be sourced in your ``~.bashrc``.
-
-You may want to add it to ``~/.bashrc`` to avoid having to do it for each terminal.
-```
-source {path to workspace}/devel/setup.bash
-```
-
-2. (First time test only) You can launch the robot sim with:
-
-```
-roslaunch sim_launch base_ralt_tiago.launch
-```
-
-3. To run the restricted task 3 scenario:
-
-```
-# launch the simulation and start the gaan software controller
 roslaunch sim_launch restricted_task_3.launch
-
-# (in a separate terminal) launch the rsbb which will send the start signal (granny annie pushes the summon button)
-# note: wait for the robot to initialise and tuck arm before running this command
-roslaunch fake_rsbb restricted_task_3.launch
 ```
 
-### If the Robot Model does not load...
-If there are issues with ``ModuleNotFoundError: No module named 'rospkg'``
-
-Check the version of Python that you have installed using
-```
-python --version
-echo $ROS_PYTHON_VERSION
-```
-The ``python --version`` should return ``Python 2.7.17``, and the ``echo $ROS_PYTHON_VERSION`` should return ``2``.
-
-## Change protocol
-
-**You must have your own fork to contribute to the project**, we will use a pull request model for managing contributions each change must be reviewed before merging is allowed.
-
-Here is a step by step for how to contribute to this repo. You start off having cloned a fork of the repo in to your workspace.
-```
-cd CDT2019-ERL/
-git fetch upstream
-```
-The ```fetch``` is important to ensure your copy (fork) is up to date.
-
-Next, you want to work on a branch of your fork. A branch is a subsection where you copy your fork but you can carry out experimental work and discard it or merge it with your main fork without polluting the original.
-
-To create a branch in your own fork, use ``branch``
-```
-git checkout -b tutorial
-```
-Where ``-b`` creates the local branch and checks it out at the same time. Remove ``-b`` if your branch already exists. You are now working on a branch and any changes you make will remain in this branch of the code until you ``merge`` the branches.
-Now you can make whatever changes you like to the subsection or subsection you are working on.
-When you have done some work (But not too much! Make sure to commit regularly), you need to ``add``, ``commit`` and ``push`` the work to be able to upload it to your branch online.
-You can check and see what is different between your local (your PC) and the branch you are working on.
-```
-git status
-```
-Then you have to add the files that are untracked that you want to upload.
-```
-git add tutorial.txt
-```
-You can replace ``tutorial.txt`` with the file or folder you are adding. Now that all your files that you wish to upload are tracked, you then need to commit them.
+Allow the simulation to launch, arm to tuck, adjust any visuals. Then run:
 
 ```
-git commit -m "This is a brief explanation of what has been changed."
+roslaunch fake_rssbb restricted_task_3.launch
 ```
-To upload the commit, use ``push``.
-```
-git push origin tutorial
-```
-You should now see your forked copy of the project with a branch named ``tutorial`` that contains all your changes. The next step is to ``merge`` the work using a ``pull request``. The easiest way to do this is to go to github and look at your forked repo and click create a new pull request, where the "base" is what you are adding to and the "head" is what you have been working on. In this case, the base is ``main`` and the head to compare is ``tutorial``.  
-As long as there are no conflicts with the base branch, you should be able to merge the pull request. Your main should now reflect the files you have added or changed to the branch you made and that branch can be closed.
+The score will be returned by the service calls and available in the controller, you could implement this as an automated test case by comparing the score to an expected score for each part of the scenario. 
 
-The subsequent step is to create a new pull request to merge your forked repo and the original CDT2019-ERL Repo that is held by Liam. The steps are the same but the base is ``LiamWellacot/CDT2019-ERL`` and the head is ``{git_username}/CDT2019-ERL`` and the merge is occuring on the ``main`` branches. This pull request then has to be granted by the owner of the ``base`` repo. In this case, it is Liam. Once the merge has been completed, your work is successfully available to all other collaborators!
+## Project documentation
 
-Don't forget to ``git fetch upstream`` to ensure you have an up to date repo before you work on your fork.
+- High level project documentation including software architecture and scenario TODO
+- Code level documentation is available in the readme files inside each package in ``GAAN``
+- Check the github issues for some design decisions made (note the detail is highly variable)
 
-
-## Info/useful links for team members
-
-### Other Project Sites
+## Other Project Sites for team members
 - [Sharepoint](https://heriotwatt.sharepoint.com/sites/CDT2019-ERL) for project documentation, you must use your HW credentials to access, non HW accounts cannot be added to this.
 - [Overleaf report](https://www.overleaf.com/read/tbvrxpjrnrkt) for paper (tell me your email to be added as collaborator)
+- Some notes on possible [tools/algorithms](https://heriotwatt.sharepoint.com/sites/CDT2019-ERL/_layouts/15/doc.aspx?sourcedoc={c50ef375-786c-45bd-8ff7-3e8696c3442a}&action=edit) which may be useful for coming up with a solution.
 
-### Resources 
+## General Resources 
 - The main source of information is the [consumer page of the competition website](https://www.eu-robotics.net/robotics_league/erl-consumer/about/index.html), here you can find the [rulebook](https://www.eu-robotics.net/robotics_league/upload/documents-2018/ERL_Consumer_10092018.pdf) which contains detailed descriptions of the tasks to be completed. Some additional information on the [test environments](https://www.eu-robotics.net/robotics_league/erl-consumer/certified-test-beds/index.html) and specifically the [Edinburgh test environment](https://www.eu-robotics.net/robotics_league/upload/documents-2017/ERL-SR_TestBedCertificationForm_HWU_web.pdf)
 - Home page for the [Edinburgh assisted living testbed](https://ralt.hw.ac.uk/)
-- Some notes on possible [tools/algorithms](https://heriotwatt.sharepoint.com/sites/CDT2019-ERL/_layouts/15/doc.aspx?sourcedoc={c50ef375-786c-45bd-8ff7-3e8696c3442a}&action=edit) which may be useful for coming up with a solution.
+
 
 
 
