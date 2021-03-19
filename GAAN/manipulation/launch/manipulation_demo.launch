@@ -8,10 +8,24 @@
       <arg name="robot" value="steel"/>
       <arg name="use_moveit_camera" value="true"/> 
   </include>
+  <node pkg="aruco_ros" type="single"  name="aruco_single">
+      <remap from="/camera_info"       to="/xtion/rgb/camera_info" />
+      <remap from="/image"             to="/xtion/rgb/image_rect_color" />
+      <param name="image_is_rectified" value="True"/>
+      <param name="marker_size"        value="0.045"/>
+      <param name="marker_id"          value="582"/>
+      <param name="reference_frame"    value="/base_footprint"/>   <!-- frame in which the marker pose will be expressed -->
+      <param name="camera_frame"       value="xtion_rgb_optical_frame"/>
+      <param name="marker_frame"       value="aruco_frame" />
+      <param name="corner_refinement"  value="SUBPIX" />
+  </node>
+
 
   <!-- push table_description to factory and spawn robot in gazebo -->
-  <node name="spawn_box" pkg="gazebo_ros" type="spawn_model" args="-file $(find fake_rsbb)/objects/box.urdf -urdf -x -2.7 -y 1.0 -z 1.83 -model cheezit_box" />
+  <!-- <node name="spawn_box" pkg="gazebo_ros" type="spawn_model" args="-file $(find fake_rsbb)/objects/box.urdf -urdf -x -2.7 -y 1.0 -z 1.83 -Y -1.57 -model cheezit_box" /> -->
   <!-- <node name="spawn_coke_can" pkg="gazebo_ros" type="spawn_model" args="-sdf -file $(env HOME)/.gazebo/models/coke_can/model.sdf -x -2.7 -y 1.0 -z 1.76 -R 0.0 -P 0.0 -Y 0.0 -model coke_can_model" respawn="false" output="screen" /> -->
+  <!-- Spawn the aruco cube -->
+  <node name="spawn_aruco" pkg="gazebo_ros" type="spawn_model" args="-file $(env HOME)/.gazebo/models/aruco_cube/aruco_cube.sdf -sdf -x -2.7 -y 1.0 -z 1.83 -Y -1.57 -model aruco_box" />
 
   <!-- Node exposing service to start looking for the object and trigger the picking -->
   <group if="$(arg rviz)">

@@ -99,9 +99,13 @@ class ManipulationServer(object):
         self.pick_as.send_goal_and_wait(self.pickup_goal)
 
         #Read the return code of server
-        result = self.pick_as.get_result()
-        if str(moveit_error_dict[result.error_code]) == "SUCCESS":
+        self.pick_result = self.pick_as.get_result()
+        if str(moveit_error_dict[self.pick_result.error_code]) == "SUCCESS":
             rospy.loginfo("Pick Action finished succesfully")
+
+            # robot is now holding an object
+            self.state = State.HOLDING
+            
         else:
             rospy.logerr("Failed to pick, not trying further")
             #Set state to idle
@@ -110,8 +114,6 @@ class ManipulationServer(object):
         #Fold the arm back to a neutral position
         self.tuck_arm()
 
-        # robot is now holding an object
-        self.state = State.HOLDING
 
     def place(self):
         #Service calls this function after receiving the pose to place the object
@@ -122,8 +124,8 @@ class ManipulationServer(object):
         self.place_as.send_goal_and_wait(self.pickup_goal)
 
         #Read the return code of server
-        result = self.place_as.get_result()
-        if str(moveit_error_dict[result.error_code]) == "SUCCESS":
+        self.place_result = self.place_as.get_result()
+        if str(moveit_error_dict[self.place_result.error_code]) == "SUCCESS":
             rospy.loginfo("Place action finished succesfully")
             
         else:
@@ -165,8 +167,9 @@ class ManipulationServer(object):
 
             else:
                 # place or present requested when we don't have an object
-                response = False
-                rospy.logerr("%s requested, but we must be holding an object do these actions" % msg.action)
+                if str(moveit_error_dict[self.pick_result.error_code]) != "SUCCESS":
+                    response = False
+                    rospy.logerr("%s requested, but we must be holding an object do these actions" % msg.action)
 
         # only allow place/present if the robot is holding an object
         elif self.state == State.HOLDING:
@@ -179,9 +182,10 @@ class ManipulationServer(object):
                 self.present()
 
             else:
-                # pick or invalid action sent
-                response = False
-                rospy.logerr("%s requested, but robot is already holding an object" % msg.action)
+                if str(moveit_error_dict[self.place_result.error_code]) != "SUCCESS":
+                    # pick or invalid action sent
+                    response = False 
+                    rospy.logerr("%s requested, but robot is already holding an object" % msg.action)
                     
         return ManipulateResponse(response)
 
