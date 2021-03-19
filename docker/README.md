@@ -16,12 +16,14 @@ If needed CPU support only can be added!
 
 # Run
 
-If you are running for the first time do the following. Note: we had a lot of issues at this stage... 
+If you are running for the first time do the following: 
 
 ```
 xhost +si:localuser:root
-
-touch /tmp/.docker.xauth-n
+XAUTH = /tmp/.docker.xauth-n
+touch $XAUTH
+xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+chmod a+r $XAUTH
 
 ./dev-first.bash
 ```
@@ -30,8 +32,6 @@ Once this is run once you can run the image with  ```./dev.bash``` found in the 
 This will launch the image and mount your catkin workspace from your file system to /gaan-ws
 
 To have additional terminals inside the docker environment you can re run ```./dev.bash``` from the new terminal.
-
-Before you run any ros nodes you have to ```source devel/setup.bash```, remember that this is separate from your regular environment so any commands in .bashrc are not run.
 
 When you run the container for the first time you will have to run ```catkin_make```, this builds the gaan packages which are unavailable to docker until the checkout of the repo is mounted in ```./dev-first.bash```.
 
@@ -50,7 +50,7 @@ To add new dependencies just instert the terminal command in the right dockerfil
 
  - The camera/webcam device is located in /dev/video0 in ubuntu, need to edit dev.bash to give it the correct camera name. 
 
-## Cheetsheet
+## Cheatsheet
 
 Commit to changes on a docker image, should be used to save last compilation but the code should be stored on disk by correctly mounting the file system.
 

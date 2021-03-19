@@ -152,6 +152,7 @@ class ManipulationServer(object):
         response = True
 
         # # check if requested action is valid
+        # TODO this threw errors but only from some people...
         # rospy.loginfo(type(Action))
         # actions = [e.value for e in Action]
         # if msg.action not in actions:
@@ -160,9 +161,6 @@ class ManipulationServer(object):
 
         # only allow pick requests if the current state is idle (not holding anything)
         if self.state == State.IDLE:
-            rospy.loginfo(msg.action)
-            rospy.loginfo(Action.PICK)
-            rospy.loginfo(msg.action == Action.PICK)
             if msg.action == Action.PICK:
                 self.pickup_goal.object_pose.pose = msg.goal_pose
                 self.pick()

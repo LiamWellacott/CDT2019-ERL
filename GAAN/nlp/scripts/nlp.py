@@ -33,7 +33,9 @@ class NLP:
 
         # Send message to rasa to be interpreted and generate a response
         response = requests.post('http://localhost:5005/webhooks/rest/webhook', json = {'sender': 'Tiago', 'message': msg.data})
+        rospy.loginfo("recieved a response from rasa")
         response_obj = eval(response.text)
+        rospy.loginfo(response_obj)
         for text in response_obj:
             json_text = json.dumps(text)
             json_obj = json.loads(json_text)
