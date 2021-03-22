@@ -4,6 +4,7 @@ import rospy
 from enum import Enum
 import copy
 
+import std_srvs.srv
 from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import Pose2D, Pose
 
@@ -24,8 +25,8 @@ class Controller(object):
         self.reset()
 
         # subscribe to RSBB topics
-        rospy.Subscriber('roah_rsbb/tablet/call', Empty, self._setSummoned)
-        rospy.Subscriber('roah_rsbb/tablet/position', Pose2D, self._setSummonLocation)
+        rospy.Subscriber('/roah_rsbb/tablet/call', Empty, self._setSummoned)
+        rospy.Subscriber('/roah_rsbb/tablet/position', Pose2D, self._setSummonLocation)
 
         # expose the command service to be used by the nlp module
         nlp_service = rospy.Service('/gaan/nlp/command', Command, self._vocal_commandCB)
@@ -35,6 +36,9 @@ class Controller(object):
         self.face_rec = rospy.ServiceProxy('/gaan/face_rec', Faces)
         self.speak = rospy.ServiceProxy('/gaan/nlp/speech', Speech)
         self.manipulate = rospy.ServiceProxy('/gaan/manipulate', Manipulate)
+
+        # benchmark service for receiving score
+        self.end_execute = rospy.ServiceProxy('/roah_rsbb/end_execute', std_srvs.srv.Empty)
 
         # initialise semantic map
         self.sem_map = {}
@@ -232,6 +236,9 @@ class Controller(object):
             # TODO fix manipulation
             #self.manipulate(p, 'PRESENT')
         
+        # notify referee that a task has been completed
+        self.end_execute()
+
         # request further instructions
         self.speak('Is there anything else I can do for you?')
 
