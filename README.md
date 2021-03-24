@@ -12,6 +12,19 @@ In the end we didn't manage to create a competition ready system, but we learned
 - A virtual environment and task scenario which can be used to test your system functionality "restricted_task_3"
 - A software architecture which you can base a competition system on, you may want to replace some components to improve 
 
+## Project documentation
+
+- High level project documentation including software architecture and scenario diagrams, see [this presentation](https://drive.google.com/file/d/1-JlEw5rZ3xLCFbg1VuI-TzUSlgtNpt1-/view?usp=sharing)
+- For set up see [docker README](docker/README.md), if you have issues with this I have made [a setup guide for local machines](setup.md)
+- Code level documentation:
+  - [face_rec](GAAN/face_rec/README.md)
+  - [gaan_controller](GAAN/gaan_controller/README.md)
+  - [manpulation](GAAN/gaan_controller/README.md)
+  - [navigation](GAAN/navigation/README.md)
+  - [nlp](GAAN/nlp/README.md)
+- Check the github issues for some design decisions made (note the detail is highly variable)
+
+
 ## Setup and run guides
 
 check the readme in ``docker`` for information on using that environment. I also tried to make a "setup your local machine guide" in ``setup.md`` in case you have issues with the docker environment.
@@ -32,12 +45,6 @@ Allow the simulation to launch, arm to tuck, adjust any visuals. Then run:
 roslaunch fake_rssbb restricted_task_3.launch
 ```
 The score will be returned by the service calls and available in the controller, you could implement this as an automated test case by comparing the score to an expected score for each part of the scenario. 
-
-## Project documentation
-
-- High level project documentation including software architecture and scenario TODO
-- Code level documentation is available in the readme files inside each package in ``GAAN``
-- Check the github issues for some design decisions made (note the detail is highly variable)
 
 ## Other Project Sites for team members
 - [Sharepoint](https://heriotwatt.sharepoint.com/sites/CDT2019-ERL) for project documentation, you must use your HW credentials to access, non HW accounts cannot be added to this.
